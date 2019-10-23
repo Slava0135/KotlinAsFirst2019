@@ -71,9 +71,10 @@ fun generateSpiral(height: Int, width: Int): Matrix<Int> {
     var count = 1
     var x = 0
     var y = 0
+    val condition = { count < height * width }
+    while (true) {
 
-    while (count < height * width) {
-
+        if (!condition()) break
         while (x < width - subWidthRight) {
             matrix[y, x] = count
             x++
@@ -81,6 +82,7 @@ fun generateSpiral(height: Int, width: Int): Matrix<Int> {
         }
         subHeightUp++
 
+        if (!condition()) break
         while (y < height - subHeightDown) {
             matrix[y, x] = count
             y++
@@ -88,6 +90,7 @@ fun generateSpiral(height: Int, width: Int): Matrix<Int> {
         }
         subWidthRight++
 
+        if (!condition()) break
         while (x > subWidthLeft) {
             matrix[y, x] = count
             x--
@@ -95,6 +98,7 @@ fun generateSpiral(height: Int, width: Int): Matrix<Int> {
         }
         subHeightDown++
 
+        if (!condition()) break
         while (y > subHeightUp) {
             matrix[y, x] = count
             y--
@@ -120,7 +124,17 @@ fun generateSpiral(height: Int, width: Int): Matrix<Int> {
  *  1  2  2  2  2  1
  *  1  1  1  1  1  1
  */
-fun generateRectangles(height: Int, width: Int): Matrix<Int> = TODO()
+fun generateRectangles(height: Int, width: Int): Matrix<Int> {
+    val matrix = createMatrix(height, width, 1)
+    for (count in 2..minOf(height, width)) {
+        for (i in (count - 1) until height - (count - 1)) {
+            for (j in (count - 1) until width - (count - 1)) {
+                matrix[i, j] = count
+            }
+        }
+    }
+    return matrix
+}
 
 /**
  * Сложная

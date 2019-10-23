@@ -60,7 +60,51 @@ operator fun Matrix<Int>.plus(other: Matrix<Int>): Matrix<Int> {
  * 10 11 12  5
  *  9  8  7  6
  */
-fun generateSpiral(height: Int, width: Int): Matrix<Int> = TODO()
+fun generateSpiral(height: Int, width: Int): Matrix<Int> {
+    val matrix = createMatrix(height, width, 1)
+
+    var subHeightUp = 0
+    var subWidthRight = 1
+    var subHeightDown = 1
+    var subWidthLeft = 0
+
+    var count = 1
+    var x = 0
+    var y = 0
+
+    while (count < height * width) {
+
+        while (x < width - subWidthRight) {
+            matrix[y, x] = count
+            x++
+            count++
+        }
+        subHeightUp++
+
+        while (y < height - subHeightDown) {
+            matrix[y, x] = count
+            y++
+            count++
+        }
+        subWidthRight++
+
+        while (x > subWidthLeft) {
+            matrix[y, x] = count
+            x--
+            count++
+        }
+        subHeightDown++
+
+        while (y > subHeightUp) {
+            matrix[y, x] = count
+            y--
+            count++
+        }
+        subWidthLeft++
+    }
+    if (matrix[y, x] == 1) matrix[y, x] = count
+    return matrix
+}
 
 /**
  * Сложная

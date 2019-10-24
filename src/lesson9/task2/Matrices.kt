@@ -127,11 +127,14 @@ fun generateSpiral(height: Int, width: Int): Matrix<Int> {
 fun generateRectangles(height: Int, width: Int): Matrix<Int> {
     val matrix = createMatrix(height, width, 1)
     for (count in 2..minOf(height, width)) {
-        for (i in (count - 1) until height - (count - 1)) {
-            for (j in (count - 1) until width - (count - 1)) {
-                matrix[i, j] = count
-            }
+        for (i in (count - 1) until width - (count - 1))
+            matrix[count - 1, i] = count
+        for (i in count until height - count) {
+            matrix[i, count - 1] = count
+            matrix[i, width - count] = count
         }
+        for (i in (count - 1) until width - (count - 1))
+            matrix[height - count, i] = count
     }
     return matrix
 }
@@ -149,7 +152,9 @@ fun generateRectangles(height: Int, width: Int): Matrix<Int> {
  * 10 13 16 18
  * 14 17 19 20
  */
-fun generateSnake(height: Int, width: Int): Matrix<Int> = TODO()
+fun generateSnake(height: Int, width: Int): Matrix<Int> {
+    TODO()
+}
 
 /**
  * Средняя
@@ -162,7 +167,9 @@ fun generateSnake(height: Int, width: Int): Matrix<Int> = TODO()
  * 4 5 6      8 5 2
  * 7 8 9      9 6 3
  */
-fun <E> rotate(matrix: Matrix<E>): Matrix<E> = TODO()
+fun <E> rotate(matrix: Matrix<E>): Matrix<E> {
+    TODO()
+}
 
 /**
  * Сложная

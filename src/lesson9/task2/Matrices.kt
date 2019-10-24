@@ -2,10 +2,8 @@
 
 package lesson9.task2
 
-import lesson7.task1.alignFileByWidth
 import lesson9.task1.Matrix
 import lesson9.task1.createMatrix
-import kotlin.reflect.typeOf
 
 // Все задачи в этом файле требуют наличия реализации интерфейса "Матрица" в Matrix.kt
 
@@ -366,7 +364,18 @@ data class Holes(val rows: List<Int>, val columns: List<Int>)
  *
  * К примеру, центральный элемент 12 = 1 + 2 + 4 + 5, элемент в левом нижнем углу 12 = 1 + 4 + 7 и так далее.
  */
-fun sumSubMatrix(matrix: Matrix<Int>): Matrix<Int> = TODO()
+fun sumSubMatrix(matrix: Matrix<Int>): Matrix<Int> {
+    val newMatrix = createMatrix(matrix.height, matrix.width, 0)
+    var total: Int
+    for (i in 0 until matrix.height) {
+        total = 0
+        for (j in 0 until matrix.width) {
+            for (row in 0..i) total += matrix[row, j]
+            newMatrix[i, j] = total
+        }
+    }
+    return newMatrix
+}
 
 /**
  * Сложная

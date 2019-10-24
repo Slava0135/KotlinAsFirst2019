@@ -2,8 +2,10 @@
 
 package lesson9.task2
 
+import lesson7.task1.alignFileByWidth
 import lesson9.task1.Matrix
 import lesson9.task1.createMatrix
+import kotlin.reflect.typeOf
 
 // Все задачи в этом файле требуют наличия реализации интерфейса "Матрица" в Matrix.kt
 
@@ -126,7 +128,7 @@ fun generateSpiral(height: Int, width: Int): Matrix<Int> {
  */
 fun generateRectangles(height: Int, width: Int): Matrix<Int> {
     val matrix = createMatrix(height, width, 1)
-    for (count in 2 until minOf(height, width)) {
+    for (count in 2..(minOf(height, width) + 1) / 2) {
         for (i in (count - 1) until width - (count - 1))
             matrix[count - 1, i] = count
         for (i in count until height - count) {
@@ -153,8 +155,21 @@ fun generateRectangles(height: Int, width: Int): Matrix<Int> {
  * 14 17 19 20
  */
 fun generateSnake(height: Int, width: Int): Matrix<Int> {
-
     val matrix = createMatrix(height, width, 0)
+
+    if (height == 1) {
+        for (i in 0 until width) {
+            matrix[0, i] = i + 1
+        }
+        return matrix
+    }
+    if (width == 1) {
+        for (i in 0 until height) {
+            matrix[i, 0] = i + 1
+        }
+        return matrix
+    }
+
     var count = 1
     var position = 0
 
@@ -197,7 +212,15 @@ fun generateSnake(height: Int, width: Int): Matrix<Int> {
  * 7 8 9      9 6 3
  */
 fun <E> rotate(matrix: Matrix<E>): Matrix<E> {
-    TODO()
+    require(matrix.height == matrix.width)
+    val side = matrix.height - 1
+    val newMatrix = createMatrix(matrix.height, matrix.width, matrix[0, 0])
+    for (x in 0..side) {
+        for (y in 0..side) {
+            newMatrix[x, side - y] = matrix[y, x]
+        }
+    }
+    return newMatrix
 }
 
 /**

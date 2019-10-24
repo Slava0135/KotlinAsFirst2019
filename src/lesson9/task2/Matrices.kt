@@ -126,7 +126,7 @@ fun generateSpiral(height: Int, width: Int): Matrix<Int> {
  */
 fun generateRectangles(height: Int, width: Int): Matrix<Int> {
     val matrix = createMatrix(height, width, 1)
-    for (count in 2..minOf(height, width)) {
+    for (count in 2 until minOf(height, width)) {
         for (i in (count - 1) until width - (count - 1))
             matrix[count - 1, i] = count
         for (i in count until height - count) {
@@ -153,7 +153,36 @@ fun generateRectangles(height: Int, width: Int): Matrix<Int> {
  * 14 17 19 20
  */
 fun generateSnake(height: Int, width: Int): Matrix<Int> {
-    TODO()
+
+    val matrix = createMatrix(height, width, 0)
+    var count = 1
+    var position = 0
+
+    while (position < width - 1) {
+        for (i in 0..position) {
+            matrix[i, position - i] = count
+            count++
+        }
+        position++
+    }
+
+    var j = 0
+    while (j < height - position) {
+        for (i in 0..position) {
+            matrix[j + i, width - (i + 1)] = count
+            count++
+        }
+        j++
+    }
+
+    while (position > 0) {
+        for (i in position downTo 1) {
+            matrix[height - i, width - (position - i + 1)] = count
+            count++
+        }
+        position--
+    }
+    return matrix
 }
 
 /**

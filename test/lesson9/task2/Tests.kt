@@ -117,7 +117,15 @@ class Tests {
                 )
             ), generateRectangles(5, 6)
         )
-
+        assertEquals(
+            createMatrix(
+                2, 3,
+                listOf(
+                    listOf(1, 1, 1),
+                    listOf(1, 1, 1)
+                )
+            ), generateRectangles(2, 3)
+        )
     }
 
     @Test
@@ -155,6 +163,17 @@ class Tests {
                     listOf(14, 17, 19, 20)
                 )
             ), generateSnake(5, 4)
+        )
+        assertEquals(
+            createMatrix(
+                4, 5,
+                listOf(
+                    listOf(1, 2, 4, 7, 11),
+                    listOf(3, 5, 8, 12, 15),
+                    listOf(6, 9, 13, 16, 18),
+                    listOf(10, 14, 17, 19, 20)
+                )
+            ), generateSnake(4, 5)
         )
 
     }

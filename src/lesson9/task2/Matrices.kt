@@ -319,7 +319,32 @@ fun sumNeighbours(matrix: Matrix<Int>): Matrix<Int> {
  * 0 0 0 0
  */
 fun findHoles(matrix: Matrix<Int>): Holes {
-    TODO()
+    var trigger = true
+    val rows = mutableListOf<Int>()
+    for (i in 0 until matrix.height) {
+        for (j in 0 until matrix.width) {
+            if (matrix[i, j] == 1) {
+                trigger = false
+                break
+            }
+        }
+        if (trigger)
+            rows.add(i)
+        trigger = true
+    }
+    val columns = mutableListOf<Int>()
+    for (j in 0 until matrix.width) {
+        for (i in 0 until matrix.height) {
+            if (matrix[i, j] == 1) {
+                trigger = false
+                break
+            }
+        }
+        if (trigger)
+            columns.add(j)
+        trigger = true
+    }
+    return Holes(rows, columns)
 }
 
 /**

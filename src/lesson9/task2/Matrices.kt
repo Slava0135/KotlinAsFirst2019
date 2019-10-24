@@ -283,7 +283,25 @@ fun isLatinSquare(matrix: Matrix<Int>): Boolean {
  *
  * 42 ===> 0
  */
-fun sumNeighbours(matrix: Matrix<Int>): Matrix<Int> = TODO()
+fun sumNeighbours(matrix: Matrix<Int>): Matrix<Int> {
+    val allAround =
+        listOf(Pair(0, 1), Pair(1, 0), Pair(0, -1), Pair(-1, 0), Pair(-1, -1), Pair(-1, 1), Pair(1, 1), Pair(1, -1))
+    val newMatrix = createMatrix(matrix.height, matrix.width, 0)
+    var sum: Int
+    for (i in 0 until matrix.width) {
+        for (j in 0 until matrix.height) {
+            sum = 0
+            for ((first, second) in allAround) {
+                val x = i + first
+                val y = j + second
+                if (y in 0 until matrix.height && x in 0 until matrix.width)
+                    sum += matrix[y, x]
+            }
+            newMatrix[j, i] = sum
+        }
+    }
+    return newMatrix
+}
 
 /**
  * Средняя
@@ -300,7 +318,9 @@ fun sumNeighbours(matrix: Matrix<Int>): Matrix<Int> = TODO()
  * 0 0 1 0
  * 0 0 0 0
  */
-fun findHoles(matrix: Matrix<Int>): Holes = TODO()
+fun findHoles(matrix: Matrix<Int>): Holes {
+    TODO()
+}
 
 /**
  * Класс для описания местонахождения "дырок" в матрице

@@ -405,7 +405,12 @@ fun canOpenLock(key: Matrix<Int>, lock: Matrix<Int>): Triple<Boolean, Int, Int> 
  * Инвертировать заданную матрицу.
  * При инвертировании знак каждого элемента матрицы следует заменить на обратный
  */
-operator fun Matrix<Int>.unaryMinus(): Matrix<Int> = TODO(this.toString())
+operator fun Matrix<Int>.unaryMinus(): Matrix<Int> {
+    for (i in 0 until this.height)
+        for (j in 0 until this.width)
+            this[i, j] = -this[i, j]
+    return this
+}
 
 /**
  * Средняя
@@ -415,7 +420,21 @@ operator fun Matrix<Int>.unaryMinus(): Matrix<Int> = TODO(this.toString())
  * В противном случае бросить IllegalArgumentException.
  * Подробно про порядок умножения см. статью Википедии "Умножение матриц".
  */
-operator fun Matrix<Int>.times(other: Matrix<Int>): Matrix<Int> = TODO(this.toString())
+operator fun Matrix<Int>.times(other: Matrix<Int>): Matrix<Int> {
+    require(this.width == other.height)
+    val newMatrix = createMatrix(this.height, other.width, 0)
+    var sum: Int
+    for (row in 0 until this.height) {
+        for (column in 0 until other.width) {
+            sum = 0
+            for (i in 0 until this.width) {
+                sum += this[row, i] * other[i, column]
+            }
+            newMatrix[row, column] = sum
+        }
+    }
+    return newMatrix
+}
 
 /**
  * Сложная

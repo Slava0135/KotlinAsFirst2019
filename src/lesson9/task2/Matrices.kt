@@ -4,6 +4,7 @@ package lesson9.task2
 
 import lesson9.task1.Matrix
 import lesson9.task1.createMatrix
+import java.lang.IllegalStateException as IllegalStateException1
 
 // Все задачи в этом файле требуют наличия реализации интерфейса "Матрица" в Matrix.kt
 
@@ -397,7 +398,22 @@ fun sumSubMatrix(matrix: Matrix<Int>): Matrix<Int> {
  * Вернуть тройку (Triple) -- (да/нет, требуемый сдвиг по высоте, требуемый сдвиг по ширине).
  * Если наложение невозможно, то первый элемент тройки "нет" и сдвиги могут быть любыми.
  */
-fun canOpenLock(key: Matrix<Int>, lock: Matrix<Int>): Triple<Boolean, Int, Int> = TODO()
+fun canOpenLock(key: Matrix<Int>, lock: Matrix<Int>): Triple<Boolean, Int, Int> {
+    for (row in 0..lock.height - key.height)
+        for (column in 0..lock.width - key.width) {
+            var trigger = false
+            for (ySetOf in 0 until key.height) {
+                for (xSetOf in 0 until key.width)
+                    if (lock[row + ySetOf, column + xSetOf] == key[ySetOf, xSetOf]) {
+                        trigger = true
+                        break
+                    }
+                if (trigger) break
+            }
+            if (!trigger) return Triple(true, row, column)
+        }
+    return Triple(false, 0, 0)
+}
 
 /**
  * Простая
@@ -463,7 +479,40 @@ operator fun Matrix<Int>.times(other: Matrix<Int>): Matrix<Int> {
  * 0  4 13  6
  * 3 10 11  8
  */
-fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> = TODO()
+fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> {
+    require(moves.all { it in 1..15 } && matrix.height == 4 && matrix.width == 4)
+    val allAround = listOf(Pair(0, 1), Pair(-1, 0), Pair(0, -1), Pair(1, 0))
+    fun findZero(): Pair<Int, Int> {
+        for (row in 0 until matrix.height) {
+            for (column in 0 until matrix.width) {
+                if (matrix[row, column] == 0) {
+                    return Pair(row, column)
+                }
+            }
+        }
+        return Pair(-1, -1)
+    }
+    var (row, column) = findZero()
+    var trigger: Boolean
+    for (move in moves) {
+        trigger = false
+        for ((rowSetOf, colSetOf) in allAround) {
+            val y = row + rowSetOf
+            val x = column + colSetOf
+            if (y in 0..3 && x in 0..3 && matrix[y, x] == move) {
+                matrix[row, column] = move
+                matrix[y, x] = 0
+                row = y
+                column = x
+                trigger = true
+                break
+            }
+            if (trigger) break
+        }
+        check(trigger)
+    }
+    return matrix
+}
 
 /**
  * Очень сложная

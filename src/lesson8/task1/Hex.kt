@@ -315,5 +315,3 @@ fun minContainingHexagon(vararg points: HexPoint): Hexagon {
     return Hexagon(HexPoint(0, 0), 0)
 }
 
-
-

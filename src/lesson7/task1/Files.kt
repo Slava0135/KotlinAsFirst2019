@@ -418,8 +418,8 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         }
 
     File(outputName).bufferedWriter().use {
-        it.write("<html><body>")
-        var trigger = false
+        it.write("<html><body><p>")
+        var trigger = true
         val stack = mutableListOf<Char>()
         for (line in inputLines) {
             if (line.isEmpty()) {

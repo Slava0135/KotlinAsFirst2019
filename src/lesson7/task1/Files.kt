@@ -422,9 +422,11 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         var trigger = false
         val stack = mutableListOf<Char>()
         for (line in inputLines) {
-            if (line.isEmpty() && trigger) {
-                trigger = false
-                it.write("</p>")
+            if (line.isEmpty()) {
+                if (trigger) {
+                    trigger = false
+                    it.write("</p>")
+                }
             } else {
                 if (!trigger) {
                     trigger = true

@@ -453,7 +453,8 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 }
             }
         }
-        it.write("</p></body></html>")
+        if (trigger) it.write("</p>")
+        it.write("</body></html>")
     }
 }
 

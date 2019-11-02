@@ -420,17 +420,18 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         }
 
     File(outputName).bufferedWriter().use {
-        it.write("<html><body><p>")
-        var trigger = true
+        it.write("<html><body>")
+        var trigger = false
+        val requirement = "" in inputLines
         val stack = mutableListOf<Char>()
         for (line in inputLines) {
-            if (line.isEmpty() && trigger) {
+            if (line.isEmpty() && trigger && requirement) {
                 it.write("</p>")
                 trigger = false
             } else {
                 var i = 0
                 while (i < line.length) {
-                    if (!trigger) {
+                    if (!trigger && requirement) {
                         it.write("<p>")
                         trigger = true
                     }
@@ -453,7 +454,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 }
             }
         }
-        if (trigger) it.write("</p>")
+        if (trigger && requirement) it.write("</p>")
         it.write("</body></html>")
     }
 }
@@ -620,6 +621,7 @@ fun markdownToHtmlLists(inputName: String, outputName: String) {
                         }
                     }
                     if (level == 0) it.write(line)
+                    it.newLine()
                 }
             }
         }
@@ -637,7 +639,12 @@ fun markdownToHtmlLists(inputName: String, outputName: String) {
  *
  */
 fun markdownToHtml(inputName: String, outputName: String) {
-    TODO()
+    markdownToHtmlLists(inputName, outputName)
+    val text = File(outputName).readText()
+    File(outputName).bufferedWriter().use {
+        it.write(text.removePrefix("<html><body>").removeSuffix("</body></html>"))
+    }
+    markdownToHtmlSimple(outputName, outputName)
 }
 
 /**

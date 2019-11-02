@@ -403,9 +403,7 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
 
     val inputLines = File(inputName).readLines().dropWhile { it == "" }
-
     val len = mapOf('s' to 2, 'b' to 2, 'i' to 1)
-
     fun isTag(line: String, i: Int, stack: MutableList<Char>) =
         when (line[i]) {
             '~' -> if (i + 1 < line.length && line[i + 1] == '~') 's' else null
@@ -420,8 +418,8 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         }
 
     File(outputName).bufferedWriter().use {
-        it.write("<html><body>")
-        var trigger = false
+        it.write("<html><body><p>")
+        var trigger = true
         val stack = mutableListOf<Char>()
         for (line in inputLines) {
             if (line.isEmpty() && trigger) {

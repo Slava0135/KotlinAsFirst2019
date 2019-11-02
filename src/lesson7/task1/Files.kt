@@ -429,12 +429,12 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 it.write("</p>")
                 trigger = false
             } else {
+                if (!trigger && requirement) {
+                    it.write("<p>")
+                    trigger = true
+                }
                 var i = 0
                 while (i < line.length) {
-                    if (!trigger && requirement) {
-                        it.write("<p>")
-                        trigger = true
-                    }
                     when (val tag = isTag(line, i, stack)) {
                         null -> {
                             it.write(line[i].toString())

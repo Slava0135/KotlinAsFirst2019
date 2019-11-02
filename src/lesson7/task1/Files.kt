@@ -403,7 +403,9 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
 
     val inputLines = File(inputName).readLines().dropWhile { it == "" }
+
     val len = mapOf('s' to 2, 'b' to 2, 'i' to 1)
+
     fun isTag(line: String, i: Int, stack: MutableList<Char>) =
         when (line[i]) {
             '~' -> if (i + 1 < line.length && line[i + 1] == '~') 's' else null
@@ -557,7 +559,73 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
  */
 
 fun markdownToHtmlLists(inputName: String, outputName: String) {
-    TODO()
+    File(outputName).bufferedWriter().use {
+        var level = 0
+        val stack = mutableListOf<String>()
+        fun abort() {
+            while (stack.isNotEmpty()) {
+                it.write("</li>")
+                it.write("</" + stack.last() + ">")
+                stack.removeAt(stack.size - 1)
+                level = 0
+            }
+        }
+        it.write("<html><body>")
+        for (line in File(inputName).readLines()) {
+            when {
+                line.matches(Regex("""^""" + " ".repeat(4 * level) + """\d+\..*""")) -> {
+                    stack.add("ol")
+                    it.write("<ol>")
+                    it.write("<li>")
+                    it.write(line.replaceFirst(Regex("""\s*\d+."""), ""))
+                    level++
+                }
+                line.matches(Regex("""^""" + " ".repeat(4 * level) + """\*.*""")) -> {
+                    stack.add("ul")
+                    it.write("<ul>")
+                    it.write("<li>")
+                    it.write(line.replaceFirst(Regex("""\s*\*"""), ""))
+                    level++
+                }
+                else -> {
+                    var trigger = true
+                    while (level > 0 && trigger) {
+                        it.write("</li>")
+                        when {
+                            line.matches(Regex("""^""" + " ".repeat(4 * (level - 1)) + """\d+\..*""")) -> {
+                                if (stack.last() == "ol") {
+                                    it.write("<li>")
+                                    it.write(line.replaceFirst(Regex("""\s*\d+."""), ""))
+                                    trigger = false
+                                } else {
+                                    abort()
+                                    it.write(line)
+                                }
+                            }
+                            line.matches(Regex("""^""" + " ".repeat(4 * (level - 1)) + """\*.*""")) -> {
+                                if (stack.last() == "ul") {
+                                    it.write("<li>")
+                                    it.write(line.replaceFirst(Regex("""\s*\*"""), ""))
+                                    trigger = false
+                                } else {
+                                    abort()
+                                    it.write(line)
+                                }
+                            }
+                            else -> {
+                                it.write("</" + stack.last() + ">")
+                                stack.removeAt(stack.size - 1)
+                                level--
+                            }
+                        }
+                    }
+                    if (level == 0) it.write(line)
+                }
+            }
+        }
+        abort()
+        it.write("</body></html>")
+    }
 }
 
 /**

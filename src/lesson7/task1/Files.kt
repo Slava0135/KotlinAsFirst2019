@@ -422,19 +422,18 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     File(outputName).bufferedWriter().use {
         it.write("<html><body>")
         var trigger = false
-        val requirement = "" in inputLines
         val stack = mutableListOf<Char>()
         for (line in inputLines) {
-            if (line.isEmpty() && trigger && requirement) {
+            if (line.isEmpty() && trigger) {
                 it.write("</p>")
                 trigger = false
             } else {
-                if (!trigger && requirement) {
-                    it.write("<p>")
-                    trigger = true
-                }
                 var i = 0
                 while (i < line.length) {
+                    if (!trigger) {
+                        it.write("<p>")
+                        trigger = true
+                    }
                     when (val tag = isTag(line, i, stack)) {
                         null -> {
                             it.write(line[i].toString())
@@ -454,7 +453,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 }
             }
         }
-        if (trigger && requirement) it.write("</p>")
+        if (trigger) it.write("</p>")
         it.write("</body></html>")
     }
 }

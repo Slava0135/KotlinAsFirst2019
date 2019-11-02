@@ -309,8 +309,8 @@ Basic, Ruby, Swift.
         markdownToHtml("input/markdown_simple.md", "temp.html")
         checkHtmlSimpleExample()
 
-        markdownToHtml("input/markdown_lists.md", "temp.html")
-        checkHtmlListsExample()
+        //markdownToHtml("input/markdown_lists.md", "temp.html")
+        //checkHtmlListsExample()
     }
 
     @Test

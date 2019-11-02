@@ -3,8 +3,6 @@
 package lesson5.task1
 
 import ru.spbstu.wheels.sorted
-import kotlin.math.max
-import kotlin.math.min
 
 /**
  * Пример
@@ -391,25 +389,25 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  *   ) -> emptySet()
  */
 fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
-    val valueList = mutableListOf(0)
-    val packList = mutableListOf(setOf<String>())
+    val valueArray = IntArray(capacity + 1) { 0 }
+    val packArray = Array<Set<String>>(capacity + 1) { emptySet() }
     for (weight in 1..capacity) {
-        var maxCost = valueList[weight - 1]
-        var maxElements = packList[weight - 1]
+        var maxCost = valueArray[weight - 1]
+        var maxElements = packArray[weight - 1]
         for ((treasure, data) in treasures) {
             val index = weight - data.first
             if (index >= 0) {
-                if (treasure !in packList[index]) {
-                    val currentCost = data.second + valueList[index]
+                if (treasure !in packArray[index]) {
+                    val currentCost = data.second + valueArray[index]
                     if (currentCost > maxCost) {
                         maxCost = currentCost
-                        maxElements = packList[index] + treasure
+                        maxElements = packArray[index] + treasure
                     }
                 }
             }
         }
-        valueList.add(maxCost)
-        packList.add(maxElements)
+        valueArray[weight] = maxCost
+        packArray[weight] = (maxElements)
     }
-    return packList[capacity]
+    return packArray[capacity]
 }

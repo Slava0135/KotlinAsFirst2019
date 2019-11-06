@@ -4,6 +4,7 @@ package lesson9.task2
 
 import lesson9.task1.Matrix
 import lesson9.task1.createMatrix
+import kotlin.math.abs
 
 // Все задачи в этом файле требуют наличия реализации интерфейса "Матрица" в Matrix.kt
 
@@ -230,6 +231,16 @@ fun <E> rotate(matrix: Matrix<E>): Matrix<E> {
     for (x in 0..side) {
         for (y in 0..side) {
             newMatrix[x, side - y] = matrix[y, x]
+        }
+    }
+    return newMatrix
+}
+
+fun <E> copy(matrix: Matrix<E>): Matrix<E> {
+    val newMatrix = createMatrix(matrix.height, matrix.width, matrix[0, 0])
+    for (y in 0 until matrix.height) {
+        for (x in 0 until matrix.width) {
+            newMatrix[y, x] = matrix[y, x]
         }
     }
     return newMatrix
@@ -478,20 +489,22 @@ operator fun Matrix<Int>.times(other: Matrix<Int>): Matrix<Int> {
  * 0  4 13  6
  * 3 10 11  8
  */
+
+fun findNum(matrix: Matrix<Int>, num: Int): Pair<Int, Int> {
+    for (row in 0 until matrix.height) {
+        for (column in 0 until matrix.width) {
+            if (matrix[row, column] == num) {
+                return Pair(row, column)
+            }
+        }
+    }
+    return Pair(-1, -1)
+}
+
 fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> {
     require(moves.all { it in 1..15 } && matrix.height == 4 && matrix.width == 4)
     val allAround = listOf(Pair(0, 1), Pair(-1, 0), Pair(0, -1), Pair(1, 0))
-    fun findZero(): Pair<Int, Int> {
-        for (row in 0 until matrix.height) {
-            for (column in 0 until matrix.width) {
-                if (matrix[row, column] == 0) {
-                    return Pair(row, column)
-                }
-            }
-        }
-        return Pair(-1, -1)
-    }
-    var (row, column) = findZero()
+    var (row, column) = findNum(matrix, 0)
     var trigger: Boolean
     for (move in moves) {
         trigger = false
@@ -552,4 +565,75 @@ fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> {
  *
  * Перед решением этой задачи НЕОБХОДИМО решить предыдущую
  */
-fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> = TODO()
+
+fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
+
+    val allAround = listOf(Pair(0, 1), Pair(-1, 0), Pair(0, -1), Pair(1, 0))
+    fun countMoves(matrix: Matrix<Int>): Int {
+        var count = 0
+        for (row in 0..3) {
+            for (column in 0..3) {
+                val num = matrix[row, column]
+                count += if (num == 0) {
+                    (3 - row) + (3 - column)
+                } else {
+                    abs(row - (num - 1) / 4) + abs(column - (num - 1) % 4)
+                }
+            }
+        }
+        return count
+    }
+
+    fun isSolvable(): Boolean {
+        val observed = mutableSetOf<Int>()
+        var count = 0
+        for (row in 0..3) {
+            for (column in 0..3) {
+                val num = matrix[row, column]
+                count += num - observed.count { it < num }
+                observed.add(num)
+            }
+        }
+        val (row) = findNum(matrix, 0)
+        return (count + row) % 2 == 0
+    }
+
+    val isNotSolvable = !isSolvable()
+    if (isNotSolvable) {
+        val (y1, x1) = findNum(matrix, 14)
+        matrix[y1, x1] = 15
+        val (y2, x2) = findNum(matrix, 15)
+        matrix[y2, x2] = 14
+    }
+
+    val nodes = mutableListOf(Triple(matrix, listOf<Int>(), countMoves(matrix)))
+    while (true) {
+        val hop = nodes.minBy { it.third }!!
+        val (coMatrix, coMoves, movesLeft) = hop
+        if (movesLeft == 0) {
+            return if (isNotSolvable) {
+                coMoves.map {
+                    when (it) {
+                        14 -> 15
+                        15 -> 14
+                        else -> it
+                    }
+                }
+            } else coMoves
+        } else {
+            val (zeroY, zeroX) = findNum(coMatrix, 0)
+            for ((y, x) in allAround) {
+                if (zeroY + y in 0..3 && zeroX + x in 0..3) {
+                    val num = coMatrix[zeroY + y, zeroX + x]
+                    if (coMoves.isEmpty() || num != coMoves.last()) {
+                        val newMatrix = copy(coMatrix)
+                        newMatrix[zeroY, zeroX] = num
+                        newMatrix[zeroY + y, zeroX + x] = 0
+                        nodes.add(Triple(newMatrix, coMoves + num, countMoves(newMatrix)))
+                    }
+                }
+            }
+            nodes.remove(hop)
+        }
+    }
+}

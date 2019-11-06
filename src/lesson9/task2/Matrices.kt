@@ -569,36 +569,22 @@ fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> {
 fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
 
     val allAround = listOf(Pair(0, 1), Pair(-1, 0), Pair(0, -1), Pair(1, 0))
-    fun countMoves(matrix: Matrix<Int>): Int {
-        var count = 0
-        for (row in 0..3) {
-            for (column in 0..3) {
-                val num = matrix[row, column]
-                count += if (num == 0) {
-                    (3 - row) + (3 - column)
-                } else {
-                    abs(row - (num - 1) / 4) + abs(column - (num - 1) % 4)
-                }
-            }
-        }
-        return count
-    }
 
-    fun isSolvable(): Boolean {
+    fun countRevert(matrix: Matrix<Int>): Int {
         val observed = mutableSetOf<Int>()
         var count = 0
         for (row in 0..3) {
             for (column in 0..3) {
                 val num = matrix[row, column]
-                count += num - observed.count { it < num }
+                count += if (num == 0) 15 - observed.size
+                else num - observed.count { it < num } - 1
                 observed.add(num)
             }
         }
-        val (row) = findNum(matrix, 0)
-        return (count + row) % 2 == 0
+        return count
     }
 
-    val isNotSolvable = !isSolvable()
+    val isNotSolvable = (countRevert(matrix) + findNum(matrix, 0).first + 1) % 2 != 0
     if (isNotSolvable) {
         val (y1, x1) = findNum(matrix, 14)
         matrix[y1, x1] = 15
@@ -606,9 +592,9 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
         matrix[y2, x2] = 14
     }
 
-    val nodes = mutableListOf(Triple(matrix, listOf<Int>(), countMoves(matrix)))
+    val nodes = mutableListOf(Triple(matrix, listOf<Int>(), countRevert(matrix)))
     while (true) {
-        val hop = nodes.minBy { it.third }!!
+        val hop = nodes.minBy { it.second.size + it.third }!!
         val (coMatrix, coMoves, movesLeft) = hop
         if (movesLeft == 0) {
             return if (isNotSolvable) {
@@ -629,7 +615,7 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
                         val newMatrix = copy(coMatrix)
                         newMatrix[zeroY, zeroX] = num
                         newMatrix[zeroY + y, zeroX + x] = 0
-                        nodes.add(Triple(newMatrix, coMoves + num, countMoves(newMatrix)))
+                        nodes.add(Triple(newMatrix, coMoves + num, countRevert(newMatrix)))
                     }
                 }
             }

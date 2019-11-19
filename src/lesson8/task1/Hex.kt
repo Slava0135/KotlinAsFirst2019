@@ -285,33 +285,33 @@ fun hexagonByThreePoints(a: HexPoint, b: HexPoint, c: HexPoint): Hexagon? {
 fun minContainingHexagon(vararg points: HexPoint): Hexagon {
     require(points.isNotEmpty())
     if (points.size == 1) return Hexagon(points[0], 0)
-    var farPoint = points[0]
     var maxDistance = 0
     var maxRadius = 0
     for (point in points) {
-        val distances = points.map { point.distance(it) }
-        val dist = distances.filter { it != 0 }.min()!!
+        val distances = points.map { point.distance(it) }.filter { it != 0 }
+        val dist = distances.min() ?: 0
         if (dist > maxDistance) {
-            farPoint = point
             maxDistance = dist
         }
-        val otherDist = distances.max()!!
+        val otherDist = distances.max() ?: 0
         if (otherDist > maxRadius) {
             maxRadius = otherDist
         }
     }
     val directions = Direction.values().filter { it != Direction.INCORRECT }
-    for (radius in (maxDistance / 2)..maxRadius) {
-        var currentPoint = farPoint.move(Direction.DOWN_LEFT, radius)
-        for (direction in directions) {
-            var moves = 0
-            while (moves != radius) {
-                if (points.all { currentPoint.distance(it) <= radius }) return Hexagon(currentPoint, radius)
-                currentPoint = currentPoint.move(direction, 1)
-                moves++
+    for (point in points) {
+        for (radius in (maxDistance / 2)..maxRadius) {
+            var currentPoint = point.move(Direction.DOWN_LEFT, radius)
+            for (direction in directions) {
+                var moves = 0
+                while (moves < radius) {
+                    if (points.all { currentPoint.distance(it) <= radius }) return Hexagon(currentPoint, radius)
+                    currentPoint = currentPoint.move(direction, 1)
+                    moves++
+                }
             }
         }
     }
-    return Hexagon(HexPoint(0, 0), 0)
+    return Hexagon(HexPoint(0, 0), -1)
 }
 

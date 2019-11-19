@@ -299,19 +299,23 @@ fun minContainingHexagon(vararg points: HexPoint): Hexagon {
         }
     }
     val directions = Direction.values().filter { it != Direction.INCORRECT }
+    val variants = mutableListOf<Hexagon>()
     for (point in points) {
         for (radius in (maxDistance / 2)..maxRadius) {
             var currentPoint = point.move(Direction.DOWN_LEFT, radius)
             for (direction in directions) {
                 var moves = 0
                 while (moves < radius) {
-                    if (points.all { currentPoint.distance(it) <= radius }) return Hexagon(currentPoint, radius)
+                    if (points.all { currentPoint.distance(it) <= radius }) {
+                        variants.add(Hexagon(currentPoint, radius))
+                        break
+                    }
                     currentPoint = currentPoint.move(direction, 1)
                     moves++
                 }
             }
         }
     }
-    return Hexagon(HexPoint(0, 0), -1)
+    return variants.minBy { it.radius } ?: Hexagon(HexPoint(0, 0), -1)
 }
 

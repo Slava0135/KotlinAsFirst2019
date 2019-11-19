@@ -174,6 +174,6 @@ class HexTests {
         //)
         //val anotherResult = minContainingHexagon(*anotherPoints)
         //assertEquals(1244, anotherResult.radius)
-        //assertTrue(anotherPoints.all { anotherResult.contains(it) })
+        //(anotherPoints.all { anotherResult.contains(it) })
     }
 }

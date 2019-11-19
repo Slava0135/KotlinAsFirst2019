@@ -287,35 +287,31 @@ fun minContainingHexagon(vararg points: HexPoint): Hexagon {
     if (points.size == 1) return Hexagon(points[0], 0)
     var maxDistance = 0
     var maxRadius = 0
+    var farPoint = HexPoint(0, 0)
     for (point in points) {
         val distances = points.map { point.distance(it) }.filter { it != 0 }
-        val dist = distances.min() ?: 0
-        if (dist > maxDistance) {
-            maxDistance = dist
+        val minDist = distances.min() ?: 0
+        if (minDist > maxDistance) {
+            maxDistance = minDist
         }
-        val otherDist = distances.max() ?: 0
-        if (otherDist > maxRadius) {
-            maxRadius = otherDist
+        val maxDist = distances.max() ?: 0
+        if (maxDist > maxRadius) {
+            farPoint = point
+            maxRadius = maxDist
         }
     }
     val directions = Direction.values().filter { it != Direction.INCORRECT }
-    val variants = mutableListOf<Hexagon>()
-    for (point in points) {
-        for (radius in (maxDistance / 2)..maxRadius) {
-            var currentPoint = point.move(Direction.DOWN_LEFT, radius)
-            for (direction in directions) {
-                var moves = 0
-                while (moves < radius) {
-                    if (points.all { currentPoint.distance(it) <= radius }) {
-                        variants.add(Hexagon(currentPoint, radius))
-                        break
-                    }
-                    currentPoint = currentPoint.move(direction, 1)
-                    moves++
-                }
+    for (radius in (maxDistance / 2)..maxRadius) {
+        var currentPoint = farPoint.move(Direction.DOWN_LEFT, radius)
+        for (direction in directions) {
+            var moves = 0
+            while (moves < radius) {
+                if (points.all { currentPoint.distance(it) <= radius }) return Hexagon(currentPoint, radius)
+                currentPoint = currentPoint.move(direction, 1)
+                moves++
             }
         }
     }
-    return variants.minBy { it.radius } ?: Hexagon(HexPoint(0, 0), -1)
+    return Hexagon(HexPoint(0, 0), -1)
 }
 

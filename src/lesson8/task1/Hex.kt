@@ -285,8 +285,9 @@ fun hexagonByThreePoints(a: HexPoint, b: HexPoint, c: HexPoint): Hexagon? {
 fun minContainingHexagon(vararg points: HexPoint): Hexagon {
     require(points.isNotEmpty())
     if (points.size == 1) return Hexagon(points[0], 0)
-    var maxDistance = 0
-    var maxRadius = 0
+    var maxDistance = -1
+    var maxRadius = -1
+    var maxSquareDist = -1
     var farPoint = HexPoint(0, 0)
     for (point in points) {
         val distances = points.map { point.distance(it) }.filter { it != 0 }
@@ -295,9 +296,12 @@ fun minContainingHexagon(vararg points: HexPoint): Hexagon {
             maxDistance = minDist
         }
         val maxDist = distances.max() ?: 0
-        if (maxDist > maxRadius) {
-            farPoint = point
+        if (maxDist > maxRadius)
             maxRadius = maxDist
+        val squareDist = distances.sumBy { it * it }
+        if (squareDist > maxSquareDist) {
+            farPoint = point
+            maxSquareDist = squareDist
         }
     }
     val directions = Direction.values().filter { it != Direction.INCORRECT }

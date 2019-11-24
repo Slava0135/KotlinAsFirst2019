@@ -567,5 +567,28 @@ fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> {
  */
 
 fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
-    TODO()
+
+    fun inversions(matrix: Matrix<Int>): Int {
+        val checked = mutableListOf<Int>()
+        var count = 0
+        for (i in 0..3) {
+            for (j in 0..3) {
+                val elem = matrix[i, j]
+                count += (elem - 1) - checked.count { it < elem }
+            }
+        }
+        return count
+    }
+
+    var replaced = false
+    if ((findNum(matrix, 0).first % 2 + inversions(matrix)) % 2 != 0) {
+        replaced = true
+        val (y1, x1) = findNum(matrix, 15)
+        val (y2, x2) = findNum(matrix, 14)
+        matrix[y1, x1] = 14
+        matrix[y2, x2] = 15
+    }
+
+    val moves = listOf<Int>()
+    return moves
 }

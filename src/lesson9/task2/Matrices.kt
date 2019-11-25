@@ -4,6 +4,7 @@ package lesson9.task2
 
 import lesson9.task1.Matrix
 import lesson9.task1.createMatrix
+import java.lang.IllegalStateException
 import kotlin.math.abs
 
 // Все задачи в этом файле требуют наличия реализации интерфейса "Матрица" в Matrix.kt
@@ -490,40 +491,53 @@ operator fun Matrix<Int>.times(other: Matrix<Int>): Matrix<Int> {
  * 3 10 11  8
  */
 
-fun findNum(matrix: Matrix<Int>, num: Int): Pair<Int, Int> {
-    for (row in 0 until matrix.height) {
-        for (column in 0 until matrix.width) {
-            if (matrix[row, column] == num) {
-                return Pair(row, column)
+class PlayGrid(val grid: Matrix<Int>) {
+    private fun findNum(num: Int): Pair<Int, Int> {
+        for (row in 0 until grid.height) {
+            for (column in 0 until grid.width) {
+                if (grid[row, column] == num) {
+                    return Pair(row, column)
+                }
             }
         }
+        return Pair(-1, -1)
     }
-    return Pair(-1, -1)
+
+    class Tile(var row: Int, var col: Int)
+
+    private val blank = Tile(findNum(0).first, findNum(0).second)
+
+    fun numReplace(first: Int, second: Int) {
+        val (firstRow, firstCol) = findNum(first)
+        val (secondRow, secondCol) = findNum(second)
+        replace(first, firstRow, firstCol, second, secondRow, secondCol)
+    }
+
+    private fun replace(first: Int, firstRow: Int, firstCol: Int, second: Int, secondRow: Int, secondCol: Int) {
+        grid[firstRow, firstCol] = second
+        grid[secondRow, secondCol] = first
+    }
+
+    fun move(number: Int) {
+        val allAround = listOf(Pair(0, 1), Pair(-1, 0), Pair(0, -1), Pair(1, 0))
+        for ((rowAdd, colAdd) in allAround) {
+            val row = blank.row + rowAdd
+            val col = blank.col + colAdd
+            if (row in 0 until grid.height && col in 0 until grid.width && grid[row, col] == number) {
+                replace(0, blank.row, blank.col, number, row, col)
+                blank.row = row
+                blank.col = col
+                return
+            }
+        }
+        throw IllegalStateException()
+    }
 }
 
 fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> {
-    require(moves.all { it in 1..15 } && matrix.height == 4 && matrix.width == 4)
-    val allAround = listOf(Pair(0, 1), Pair(-1, 0), Pair(0, -1), Pair(1, 0))
-    var (row, column) = findNum(matrix, 0)
-    var trigger: Boolean
-    for (move in moves) {
-        trigger = false
-        for ((rowSetOf, colSetOf) in allAround) {
-            val y = row + rowSetOf
-            val x = column + colSetOf
-            if (y in 0..3 && x in 0..3 && matrix[y, x] == move) {
-                matrix[row, column] = move
-                matrix[y, x] = 0
-                row = y
-                column = x
-                trigger = true
-                break
-            }
-            if (trigger) break
-        }
-        check(trigger)
-    }
-    return matrix
+    val grid = PlayGrid(matrix)
+    moves.forEach { grid.move(it) }
+    return grid.grid
 }
 
 /**
@@ -567,28 +581,5 @@ fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> {
  */
 
 fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
-
-    fun inversions(matrix: Matrix<Int>): Int {
-        val checked = mutableListOf<Int>()
-        var count = 0
-        for (i in 0..3) {
-            for (j in 0..3) {
-                val elem = matrix[i, j]
-                count += (elem - 1) - checked.count { it < elem }
-            }
-        }
-        return count
-    }
-
-    var replaced = false
-    if ((findNum(matrix, 0).first % 2 + inversions(matrix)) % 2 != 0) {
-        replaced = true
-        val (y1, x1) = findNum(matrix, 15)
-        val (y2, x2) = findNum(matrix, 14)
-        matrix[y1, x1] = 14
-        matrix[y2, x2] = 15
-    }
-
-    val moves = listOf<Int>()
-    return moves
+    TODO()
 }

@@ -5,7 +5,6 @@ package lesson9.task2
 import lesson9.task1.Matrix
 import lesson9.task1.createMatrix
 import java.lang.IllegalStateException
-import kotlin.math.abs
 
 // Все задачи в этом файле требуют наличия реализации интерфейса "Матрица" в Matrix.kt
 
@@ -507,6 +506,20 @@ class PlayGrid(val grid: Matrix<Int>) {
 
     private val blank = Tile(findNum(0).first, findNum(0).second)
 
+    private val allAround = listOf(Pair(0, 1), Pair(-1, 0), Pair(0, -1), Pair(1, 0))
+
+    fun around(): List<Int> {
+        val result = mutableListOf<Int>()
+        for ((rowAdd, colAdd) in allAround) {
+            val row = blank.row + rowAdd
+            val col = blank.col + colAdd
+            if (row in 0 until grid.height && col in 0 until grid.width) {
+                result.add(grid[row, col])
+            }
+        }
+        return result
+    }
+
     fun numReplace(first: Int, second: Int) {
         val (firstRow, firstCol) = findNum(first)
         val (secondRow, secondCol) = findNum(second)
@@ -519,7 +532,6 @@ class PlayGrid(val grid: Matrix<Int>) {
     }
 
     fun move(number: Int) {
-        val allAround = listOf(Pair(0, 1), Pair(-1, 0), Pair(0, -1), Pair(1, 0))
         for ((rowAdd, colAdd) in allAround) {
             val row = blank.row + rowAdd
             val col = blank.col + colAdd
@@ -579,6 +591,18 @@ fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> {
  *
  * Перед решением этой задачи НЕОБХОДИМО решить предыдущую
  */
+class Node(val playGrid: PlayGrid, val preHash: Long, val moves: Int, val lastMove: Int) {
+    private fun hashCount(): Long {
+        TODO()
+    }
+
+    private fun heuristic(): Int {
+        TODO()
+    }
+
+    val hash = hashCount()
+    val dist = heuristic()
+}
 
 fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
     TODO()

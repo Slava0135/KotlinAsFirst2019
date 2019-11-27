@@ -606,5 +606,40 @@ fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> {
  */
 
 fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
-    TODO()
+
+    val playGrid = PlayGrid(matrix)
+    val isSolvable = playGrid.isSolvable()
+    if (!isSolvable) {
+        playGrid.numReplace(14, 15)
+    }
+
+    fun hash(grid: Matrix<Int>): Long {
+        var hash: Long = 0
+        var count = 0
+        for (row in 0..3) {
+            for (col in 0..3) {
+                var num = grid[row, col]
+                for (i in 0 until count) {
+                    num *= 16
+                }
+                hash += num
+                count++
+            }
+        }
+        return hash
+    }
+
+    fun upDist(grid: Matrix<Int>): Int {
+        TODO()
+    }
+
+    class Node(val playGrid: PlayGrid, val dist: Int, val moves: Int, val hash: Long)
+
+    val firstHash = hash(playGrid.grid)
+    val hashes = mutableMapOf<Long, Pair<Long, Int>?>(firstHash to null)
+    var nodes = mutableListOf(Node(playGrid, 0, 0, firstHash))
+    val nextHop = mutableListOf<Node>()
+    while (true) {
+        TODO()
+    }
 }

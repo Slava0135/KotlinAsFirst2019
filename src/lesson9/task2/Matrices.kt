@@ -614,20 +614,14 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
         playGrid.numReplace(14, 15)
     }
 
-    fun hash(grid: Matrix<Int>): Long {
-        var hash: Long = 0
-        var count = 0
+    fun hash(grid: Matrix<Int>): String {
+        val map = mutableListOf<Int>()
         for (row in 0..3) {
             for (col in 0..3) {
-                var num = grid[row, col]
-                for (i in 0 until count) {
-                    num *= 16
-                }
-                hash += num
-                count++
+                map.add(grid[row, col])
             }
         }
-        return hash
+        return map.joinToString("|")
     }
 
     fun upDist(grid: Matrix<Int>): Int {
@@ -644,13 +638,27 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
         return count
     }
 
-    class Node(val playGrid: PlayGrid, val dist: Int, val moves: Int, val hash: Long)
+    class Node(val playGrid: PlayGrid, val dist: Int, val moves: Int, val hash: String)
 
     val firstHash = hash(playGrid.grid)
-    val hashes = mutableMapOf<Long, Pair<Long, Int>?>(firstHash to null)
-    var nodes = mutableListOf(Node(playGrid, 0, 0, firstHash))
+    val hashes = mutableMapOf<String, Pair<String, Int>?>(firstHash to null)
+    var nodes = listOf(Node(playGrid, upDist(playGrid.grid), 0, firstHash))
     val nextHop = mutableListOf<Node>()
     while (true) {
-
+        val node = nodes.minBy { it.dist + it.moves }!!
+        val possibleMoves = node.playGrid.around()
+        for (move in possibleMoves) {
+            val newPlayGrid = PlayGrid(playGrid.grid)
+            newPlayGrid.move(move)
+            val newHash = hash(newPlayGrid.grid)
+            if (newHash !in hashes.keys) {
+                val dist = upDist(newPlayGrid.grid)
+                if (dist == 0) return emptyList()
+                nextHop.add(Node(newPlayGrid, dist, node.moves + 1, newHash))
+                hashes[newHash] = Pair(node.hash, move)
+            }
+        }
+        nodes = nextHop.toList()
+        nextHop.clear()
     }
 }

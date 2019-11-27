@@ -640,17 +640,19 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
         return count
     }
 
+    if (upDist(playGrid.grid) == 0) return emptyList()
+
     class Node(val playGrid: PlayGrid, val dist: Int, val moves: Int, val hash: String)
 
     val firstHash = hash(playGrid.grid)
     val hashes = mutableMapOf<String, Pair<String, Int>?>(firstHash to null)
-    var nodes = listOf(Node(playGrid, upDist(playGrid.grid), 0, firstHash))
+    val nodes = mutableListOf(Node(playGrid, upDist(playGrid.grid), 0, firstHash))
     val nextHop = mutableListOf<Node>()
     while (true) {
         val node = nodes.minBy { it.dist + it.moves }!!
         val possibleMoves = node.playGrid.around()
         for (move in possibleMoves) {
-            val newPlayGrid = PlayGrid(playGrid.grid)
+            val newPlayGrid = PlayGrid(copy(node.playGrid.grid))
             newPlayGrid.move(move)
             val newHash = hash(newPlayGrid.grid)
             if (newHash !in hashes.keys) {
@@ -660,7 +662,8 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
                 hashes[newHash] = Pair(node.hash, move)
             }
         }
-        nodes = nextHop.toList()
+        nodes.remove(node)
+        nodes.addAll(nextHop)
         nextHop.clear()
     }
 }

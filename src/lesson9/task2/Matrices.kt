@@ -531,6 +531,19 @@ class PlayGrid(val grid: Matrix<Int>) {
         grid[secondRow, secondCol] = first
     }
 
+    fun isSolvable(): Boolean {
+        val checked = mutableListOf<Int>()
+        var count = 0
+        for (row in 0 until grid.height) {
+            for (col in 0 until grid.width) {
+                val num = grid[row, col]
+                count += num - 1 - checked.count { it < num }
+                checked.add(num)
+            }
+        }
+        return grid.width % 2 != 0 || (count + blank.row) % 2 != 0
+    }
+
     fun move(number: Int) {
         for ((rowAdd, colAdd) in allAround) {
             val row = blank.row + rowAdd

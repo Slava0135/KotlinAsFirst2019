@@ -5,6 +5,7 @@ package lesson9.task2
 import lesson9.task1.Matrix
 import lesson9.task1.createMatrix
 import java.lang.IllegalStateException
+import kotlin.math.abs
 
 // Все задачи в этом файле требуют наличия реализации интерфейса "Матрица" в Matrix.kt
 
@@ -630,7 +631,17 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
     }
 
     fun upDist(grid: Matrix<Int>): Int {
-        TODO()
+        var count = 0
+        for (row in 0..3) {
+            for (col in 0..3) {
+                val num = grid[row, col]
+                count += if (num != 0)
+                    abs(row - (num - 1) / 4) + abs(col - (num - 1) % 4)
+                else
+                    (3 - row) + (3 - col)
+            }
+        }
+        return count
     }
 
     class Node(val playGrid: PlayGrid, val dist: Int, val moves: Int, val hash: Long)
@@ -640,6 +651,6 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
     var nodes = mutableListOf(Node(playGrid, 0, 0, firstHash))
     val nextHop = mutableListOf<Node>()
     while (true) {
-        TODO()
+
     }
 }

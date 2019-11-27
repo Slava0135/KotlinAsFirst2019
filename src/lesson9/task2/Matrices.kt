@@ -591,18 +591,6 @@ fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> {
  *
  * Перед решением этой задачи НЕОБХОДИМО решить предыдущую
  */
-class Node(val playGrid: PlayGrid, val preHash: Long, val moves: Int, val lastMove: Int) {
-    private fun hashCount(): Long {
-        TODO()
-    }
-
-    private fun heuristic(): Int {
-        TODO()
-    }
-
-    val hash = hashCount()
-    val dist = heuristic()
-}
 
 fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
     TODO()

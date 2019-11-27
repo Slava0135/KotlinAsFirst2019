@@ -299,9 +299,7 @@ fun minContainingHexagon(vararg points: HexPoint): Hexagon {
                     if (maxDist < radius) {
                         newNodes.add(newPoint)
                         lastPoint = newPoint
-                        while (maxDist < radius) {
-                            radius--
-                        }
+                        radius = maxDist
                     }
                 }
                 nodes = newNodes.toMutableList()

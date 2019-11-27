@@ -538,8 +538,10 @@ class PlayGrid(val grid: Matrix<Int>) {
         for (row in 0 until grid.height) {
             for (col in 0 until grid.width) {
                 val num = grid[row, col]
-                count += num - 1 - checked.count { it < num }
-                checked.add(num)
+                if (num != 0) {
+                    count += num - 1 - checked.count { it < num }
+                    checked.add(num)
+                }
             }
         }
         return grid.width % 2 != 0 || (count + blank.row) % 2 != 0

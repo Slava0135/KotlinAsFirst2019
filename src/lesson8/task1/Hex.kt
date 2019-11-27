@@ -3,6 +3,7 @@
 package lesson8.task1
 
 import kotlin.math.abs
+import kotlin.math.min
 
 /**
  * Точка (гекс) на шестиугольной сетке.
@@ -285,30 +286,34 @@ fun hexagonByThreePoints(a: HexPoint, b: HexPoint, c: HexPoint): Hexagon? {
 
 fun minContainingHexagon(vararg points: HexPoint): Hexagon {
     require(points.isNotEmpty())
+
     val directions = Direction.values().filter { it != Direction.INCORRECT }
-    fun minimizeHex(point: HexPoint, oldRadius: Int): Hexagon {
-        var radius = oldRadius
-        var nodes = mutableListOf(point)
-        val newNodes = mutableListOf<HexPoint>()
-        var lastPoint = point
-        while (nodes.isNotEmpty()) {
-            for (node in nodes) {
-                for (direction in directions) {
-                    val newPoint = node.move(direction, 1)
-                    val maxDist = points.map { it.distance(newPoint) }.max()!!
-                    if (maxDist < radius) {
-                        newNodes.add(newPoint)
-                        lastPoint = newPoint
-                        radius = maxDist
+
+    fun minimizeHex(point: HexPoint, radius: Int): Hexagon {
+        var minRadius = radius
+        var minPoint = point
+        var count = 1
+        do {
+            var trigger = false
+            var currentPoint = point.move(Direction.DOWN_LEFT, count)
+            for (direction in directions) {
+                var moves = 0
+                while (moves < count) {
+                    val maxDist = points.map { it.distance(currentPoint) }.max()!!
+                    if (maxDist < minRadius) {
+                        trigger = true
+                        minPoint = currentPoint
+                        minRadius = maxDist
                     }
+                    currentPoint = currentPoint.move(direction, 1)
+                    moves++
                 }
-                nodes = newNodes.toMutableList()
-                if (nodes.isEmpty()) break
-                newNodes.clear()
             }
-        }
-        return Hexagon(lastPoint, radius)
+            count++
+        } while (trigger)
+        return Hexagon(minPoint, minRadius)
     }
+
     if (points.size == 1) return Hexagon(points[0], 0)
     var maxDistance = -1
     var maxRadius = -1
@@ -338,4 +343,3 @@ fun minContainingHexagon(vararg points: HexPoint): Hexagon {
     }
     return Hexagon(HexPoint(0, 0), -1)
 }
-

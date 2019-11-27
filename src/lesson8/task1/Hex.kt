@@ -300,12 +300,10 @@ fun minContainingHexagon(vararg points: HexPoint): Hexagon {
                 var moves = 0
                 while (moves < count) {
                     val maxDist = points.map { it.distance(currentPoint) }.max()!!
-                    if (maxDist <= minRadius) {
-                        if (maxDist < minRadius || !trigger) {
-                            trigger = true
-                            minPoint = currentPoint
-                            minRadius = maxDist
-                        }
+                    if (maxDist < minRadius) {
+                        trigger = true
+                        minPoint = currentPoint
+                        minRadius = maxDist
                     }
                     currentPoint = currentPoint.move(direction, 1)
                     moves++

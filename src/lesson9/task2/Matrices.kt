@@ -645,9 +645,27 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
     class Node(val playGrid: PlayGrid, val dist: Int, val moves: Int, val hash: String)
 
     val firstHash = hash(playGrid.grid)
-    val hashes = mutableMapOf<String, Pair<String, Int>?>(firstHash to null)
+    val hashes = mutableMapOf(firstHash to Pair("", 0))
     val nodes = mutableListOf(Node(playGrid, upDist(playGrid.grid), 0, firstHash))
     val nextHop = mutableListOf<Node>()
+
+    fun findWay(hash: String): List<Int> {
+        var nextHash = hash
+        val moves = mutableListOf<Int>()
+        while (nextHash != firstHash) {
+            moves.add(hashes[nextHash]!!.second)
+            nextHash = hashes[nextHash]!!.first
+        }
+        return if (isSolvable) moves.reversed()
+        else moves.map {
+            when (it) {
+                14 -> 15
+                15 -> 14
+                else -> it
+            }
+        }.reversed()
+    }
+
     while (true) {
         val node = nodes.minBy { it.dist + it.moves }!!
         val possibleMoves = node.playGrid.around()
@@ -657,9 +675,9 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
             val newHash = hash(newPlayGrid.grid)
             if (newHash !in hashes.keys) {
                 val dist = upDist(newPlayGrid.grid)
-                if (dist == 0) return emptyList()
                 nextHop.add(Node(newPlayGrid, dist, node.moves + 1, newHash))
                 hashes[newHash] = Pair(node.hash, move)
+                if (dist == 0) return findWay(newHash)
             }
         }
         nodes.remove(node)

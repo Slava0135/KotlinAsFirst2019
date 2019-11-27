@@ -677,12 +677,11 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
             val newHash = hash(newPlayGrid.grid)
             if (newHash !in hashes.keys) {
                 val dist = upDist(newPlayGrid.grid)
-                nextHop.add(Node(newPlayGrid, dist + node.moves, node.moves + 1, newHash))
+                nextHop.add(Node(newPlayGrid, dist + node.moves + 1, node.moves + 1, newHash))
                 hashes[newHash] = Pair(node.hash, move)
                 if (dist == 0) return findWay(newHash)
             }
         }
-        nodes.remove(node)
         nodes.addAll(nextHop)
         nextHop.clear()
     }

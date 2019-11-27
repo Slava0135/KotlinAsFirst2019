@@ -282,12 +282,39 @@ fun hexagonByThreePoints(a: HexPoint, b: HexPoint, c: HexPoint): Hexagon? {
  *
  * Пример: 13, 32, 45, 18 -- шестиугольник радиусом 3 (с центром, например, в 15)
  */
+
 fun minContainingHexagon(vararg points: HexPoint): Hexagon {
     require(points.isNotEmpty())
+    val directions = Direction.values().filter { it != Direction.INCORRECT }
+    fun minimizeHex(point: HexPoint, oldRadius: Int): Hexagon {
+        var radius = oldRadius
+        var nodes = mutableListOf(point)
+        val newNodes = mutableListOf<HexPoint>()
+        var lastPoint = point
+        while (nodes.isNotEmpty()) {
+            for (node in nodes) {
+                for (direction in directions) {
+                    val newPoint = node.move(direction, 1)
+                    val maxDist = points.map { it.distance(newPoint) }.max()!!
+                    if (maxDist < radius) {
+                        newNodes.add(newPoint)
+                        lastPoint = newPoint
+                        while (maxDist < radius) {
+                            radius--
+                        }
+                    }
+                }
+                nodes = newNodes.toMutableList()
+                if (nodes.isEmpty()) break
+                newNodes.clear()
+            }
+        }
+        println(radius)
+        return Hexagon(lastPoint, radius)
+    }
     if (points.size == 1) return Hexagon(points[0], 0)
     var maxDistance = -1
     var maxRadius = -1
-    var maxMinDist = -1
     var farPoint = HexPoint(0, 0)
     for (point in points) {
         val distances = points.map { point.distance(it) }.filter { it != 0 }
@@ -296,21 +323,17 @@ fun minContainingHexagon(vararg points: HexPoint): Hexagon {
             maxDistance = minDist
         }
         val maxDist = distances.max() ?: 0
-        if (maxDist >= maxRadius) {
+        if (maxDist > maxRadius) {
             maxRadius = maxDist
-            if (maxDist > maxRadius || minDist > maxMinDist) {
-                maxMinDist = minDist
-                farPoint = point
-            }
+            farPoint = point
         }
     }
-    val directions = Direction.values().filter { it != Direction.INCORRECT }
     for (radius in (maxDistance / 2)..maxRadius) {
         var currentPoint = farPoint.move(Direction.DOWN_LEFT, radius)
         for (direction in directions) {
             var moves = 0
             while (moves < radius) {
-                if (points.all { currentPoint.distance(it) <= radius }) return Hexagon(currentPoint, radius)
+                if (points.all { currentPoint.distance(it) <= radius }) return minimizeHex(currentPoint, radius)
                 currentPoint = currentPoint.move(direction, 1)
                 moves++
             }

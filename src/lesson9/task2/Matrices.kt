@@ -5,6 +5,7 @@ package lesson9.task2
 import lesson9.task1.Matrix
 import lesson9.task1.createMatrix
 import java.lang.IllegalStateException
+import java.util.*
 import kotlin.math.abs
 
 // Все задачи в этом файле требуют наличия реализации интерфейса "Матрица" в Matrix.kt
@@ -646,7 +647,8 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
 
     val firstHash = hash(playGrid.grid)
     val hashes = mutableMapOf(firstHash to Pair("", 0))
-    val nodes = mutableListOf(Node(playGrid, upDist(playGrid.grid), 0, firstHash))
+    val nodes = PriorityQueue<Node>(compareBy { it.dist })
+    nodes.add(Node(playGrid, upDist(playGrid.grid), 0, firstHash))
     val nextHop = mutableListOf<Node>()
 
     fun findWay(hash: String): List<Int> {
@@ -667,7 +669,7 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
     }
 
     while (true) {
-        val node = nodes.minBy { it.dist + it.moves }!!
+        val node = nodes.poll()
         val possibleMoves = node.playGrid.around()
         for (move in possibleMoves) {
             val newPlayGrid = PlayGrid(copy(node.playGrid.grid))
@@ -675,7 +677,7 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
             val newHash = hash(newPlayGrid.grid)
             if (newHash !in hashes.keys) {
                 val dist = upDist(newPlayGrid.grid)
-                nextHop.add(Node(newPlayGrid, dist, node.moves + 1, newHash))
+                nextHop.add(Node(newPlayGrid, dist + node.moves, node.moves + 1, newHash))
                 hashes[newHash] = Pair(node.hash, move)
                 if (dist == 0) return findWay(newHash)
             }

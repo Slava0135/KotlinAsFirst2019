@@ -327,10 +327,10 @@ fun minContainingHexagon(vararg points: HexPoint): Hexagon {
         }
         val maxDist = distances.max() ?: 0
         if (maxDist >= maxRadius) {
-            maxRadius = maxDist
             if (maxDist > maxRadius || minDist > maxMinDist) {
                 farPoint = point
                 maxMinDist = minDist
+                maxRadius = maxDist
             }
         }
     }

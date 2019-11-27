@@ -309,7 +309,6 @@ fun minContainingHexagon(vararg points: HexPoint): Hexagon {
                 newNodes.clear()
             }
         }
-        println(radius)
         return Hexagon(lastPoint, radius)
     }
     if (points.size == 1) return Hexagon(points[0], 0)

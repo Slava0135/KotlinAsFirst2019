@@ -673,7 +673,6 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
 
     while (true) {
         val node = nodes.poll()
-        println(node.dist)
         val possibleMoves = node.playGrid.around()
         for (move in possibleMoves) {
             val newPlayGrid = PlayGrid(copy(node.playGrid.grid))

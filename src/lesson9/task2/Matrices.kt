@@ -614,6 +614,7 @@ fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> {
 fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
 
     val playGrid = PlayGrid(matrix)
+
     val isSolvable = playGrid.isSolvable()
     if (!isSolvable) {
         playGrid.numReplace(14, 15)
@@ -645,13 +646,13 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
 
     if (upDist(playGrid.grid) == 0) return emptyList()
 
-    class Node(val playGrid: PlayGrid, val dist: Int, val moves: Int, val hash: String)
+    class Node(val playGrid: PlayGrid, val dist: Int, val hash: String)
 
     val firstHash = hash(playGrid.grid)
-    val connections = hashMapOf(firstHash to Pair("", 0))
+    val connections = mutableMapOf(firstHash to Pair("", 0))
     val hashes = hashSetOf(firstHash)
     val nodes = PriorityQueue<Node>(compareBy { it.dist })
-    nodes.add(Node(playGrid, upDist(playGrid.grid), 0, firstHash))
+    nodes.add(Node(playGrid, upDist(playGrid.grid), firstHash))
 
     fun findWay(hash: String): List<Int> {
         var nextHash = hash
@@ -672,14 +673,15 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
 
     while (true) {
         val node = nodes.poll()
+        println(node.dist)
         val possibleMoves = node.playGrid.around()
         for (move in possibleMoves) {
             val newPlayGrid = PlayGrid(copy(node.playGrid.grid))
             newPlayGrid.move(move)
             val newHash = hash(newPlayGrid.grid)
-            if (newHash !in hashes) {
+            if (!hashes.contains(newHash)) {
                 val dist = upDist(newPlayGrid.grid)
-                nodes.add(Node(newPlayGrid, dist + node.moves + 1, node.moves + 1, newHash))
+                nodes.add(Node(newPlayGrid, dist, newHash))
                 connections[newHash] = Pair(node.hash, move)
                 hashes.add(newHash)
                 if (dist == 0) return findWay(newHash)

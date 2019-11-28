@@ -6,6 +6,7 @@ import lesson9.task1.Matrix
 import lesson9.task1.createMatrix
 import java.lang.IllegalStateException
 import java.util.*
+import kotlin.collections.HashMap
 import kotlin.math.abs
 
 // Все задачи в этом файле требуют наличия реализации интерфейса "Матрица" в Matrix.kt
@@ -493,6 +494,7 @@ operator fun Matrix<Int>.times(other: Matrix<Int>): Matrix<Int> {
  */
 
 class PlayGrid(val grid: Matrix<Int>) {
+
     private fun findNum(num: Int): Pair<Int, Int> {
         for (row in 0 until grid.height) {
             for (column in 0 until grid.width) {
@@ -646,17 +648,17 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
     class Node(val playGrid: PlayGrid, val dist: Int, val moves: Int, val hash: String)
 
     val firstHash = hash(playGrid.grid)
-    val hashes = mutableMapOf(firstHash to Pair("", 0))
+    val connections = hashMapOf(firstHash to Pair("", 0))
+    val hashes = hashSetOf(firstHash)
     val nodes = PriorityQueue<Node>(compareBy { it.dist })
     nodes.add(Node(playGrid, upDist(playGrid.grid), 0, firstHash))
-    val nextHop = mutableListOf<Node>()
 
     fun findWay(hash: String): List<Int> {
         var nextHash = hash
         val moves = mutableListOf<Int>()
         while (nextHash != firstHash) {
-            moves.add(hashes[nextHash]!!.second)
-            nextHash = hashes[nextHash]!!.first
+            moves.add(connections[nextHash]!!.second)
+            nextHash = connections[nextHash]!!.first
         }
         return if (isSolvable) moves.reversed()
         else moves.map {
@@ -675,14 +677,13 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
             val newPlayGrid = PlayGrid(copy(node.playGrid.grid))
             newPlayGrid.move(move)
             val newHash = hash(newPlayGrid.grid)
-            if (newHash !in hashes.keys) {
+            if (newHash !in hashes) {
                 val dist = upDist(newPlayGrid.grid)
-                nextHop.add(Node(newPlayGrid, dist + node.moves + 1, node.moves + 1, newHash))
-                hashes[newHash] = Pair(node.hash, move)
+                nodes.add(Node(newPlayGrid, dist + node.moves + 1, node.moves + 1, newHash))
+                connections[newHash] = Pair(node.hash, move)
+                hashes.add(newHash)
                 if (dist == 0) return findWay(newHash)
             }
         }
-        nodes.addAll(nextHop)
-        nextHop.clear()
     }
 }

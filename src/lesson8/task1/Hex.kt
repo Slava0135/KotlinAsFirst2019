@@ -286,7 +286,7 @@ fun hexagonByThreePoints(a: HexPoint, b: HexPoint, c: HexPoint): Hexagon? {
 
 fun minContainingHexagon(vararg points: HexPoint): Hexagon {
     require(points.isNotEmpty())
-    val allPoints = points.toMutableList()
+    val allPoints = points.toMutableSet()
     var center = allPoints.maxBy { hex -> allPoints.map { it.distance(hex) }.max()!! }!!
     var radius = 0
     val inHexagon = mutableListOf(center)

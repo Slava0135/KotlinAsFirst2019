@@ -156,49 +156,6 @@ class HexTests {
     @Test
     @Tag("Impossible")
     fun minContainingHexagon() {
-        val points = arrayOf(HexPoint(3, 1), HexPoint(3, 2), HexPoint(5, 4), HexPoint(8, 1))
-        val result = minContainingHexagon(*points)
-        assertEquals(3, result.radius)
-        assertTrue(points.all { result.contains(it) })
-        assertNotNull(minContainingHexagon(HexPoint(3, 1), HexPoint(2, 3), HexPoint(5, 4)))
-        val anotherPoints = arrayOf(
-            HexPoint(478, -557),
-            HexPoint(-558, 825),
-            HexPoint(-999, -557),
-            HexPoint(165, 688),
-            HexPoint(-225, -1000),
-            HexPoint(-764, 219),
-            HexPoint(-957, -558),
-            HexPoint(159, -97),
-            HexPoint(880, -557)
-        )
-        val anotherResult = minContainingHexagon(*anotherPoints)
-        assertTrue(1244 > anotherResult.radius)
-        assertTrue(anotherPoints.all { anotherResult.contains(it) })
-        val points1 = arrayOf(
-            HexPoint(-404, -957),
-            HexPoint(-558, -557),
-            HexPoint(-1000, -558),
-            HexPoint(-657, -558),
-            HexPoint(-1000, 604),
-            HexPoint(-557, -33),
-            HexPoint(-892, -558),
-            HexPoint(-928, -592),
-            HexPoint(-680, -1000),
-            HexPoint(-1000, -999),
-            HexPoint(-557, -463),
-            HexPoint(-860, -557),
-            HexPoint(-1000, -558),
-            HexPoint(-341, -999),
-            HexPoint(-558, -870),
-            HexPoint(-1000, -557),
-            HexPoint(853, -848),
-            HexPoint(384, -999),
-            HexPoint(-999, 993),
-            HexPoint(-651, -999)
-        )
-        val result1 = minContainingHexagon(*points1)
-        assertTrue(1340 >= result1.radius)
         val points2 = parse("""{
     "x": 813,
     "y": -558
@@ -492,5 +449,24 @@ class HexTests {
     "y": -557""")
         val result2 = minContainingHexagon(*points2)
         assertTrue(1337 >= result2.radius)
+        val points = arrayOf(HexPoint(3, 1), HexPoint(3, 2), HexPoint(5, 4), HexPoint(8, 1))
+        val result = minContainingHexagon(*points)
+        assertEquals(3, result.radius)
+        assertTrue(points.all { result.contains(it) })
+        assertNotNull(minContainingHexagon(HexPoint(3, 1), HexPoint(2, 3), HexPoint(5, 4)))
+        val anotherPoints = arrayOf(
+            HexPoint(478, -557),
+            HexPoint(-558, 825),
+            HexPoint(-999, -557),
+            HexPoint(165, 688),
+            HexPoint(-225, -1000),
+            HexPoint(-764, 219),
+            HexPoint(-957, -558),
+            HexPoint(159, -97),
+            HexPoint(880, -557)
+        )
+        val anotherResult = minContainingHexagon(*anotherPoints)
+        assertTrue(1244 > anotherResult.radius)
+        assertTrue(anotherPoints.all { anotherResult.contains(it) })
     }
 }

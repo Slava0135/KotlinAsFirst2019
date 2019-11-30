@@ -283,6 +283,17 @@ fun hexagonByThreePoints(a: HexPoint, b: HexPoint, c: HexPoint): Hexagon? {
  *
  * Пример: 13, 32, 45, 18 -- шестиугольник радиусом 3 (с центром, например, в 15)
  */
+fun parse(input: String): Array<HexPoint> {
+    var coords = input.replace(Regex("""[^0-9-:]"""), "").split(":")
+    coords = coords.drop(1)
+    val result = Array<HexPoint>(coords.size / 2) { HexPoint(0, 0) }
+    var i = 0
+    for (pair in coords.chunked(2)) {
+        result[i] = (HexPoint(pair[0].toInt(), pair[1].toInt()))
+        i++
+    }
+    return result
+}
 
 fun minContainingHexagon(vararg points: HexPoint): Hexagon {
     require(points.isNotEmpty())
@@ -293,15 +304,19 @@ fun minContainingHexagon(vararg points: HexPoint): Hexagon {
     allPoints.remove(center)
     while (allPoints.isNotEmpty()) {
         val newPoint = allPoints.maxBy { it.distance(center) }!!
-        for (newCenter in pathBetweenHexes(center, newPoint)) {
-            radius = inHexagon.map { it.distance(newCenter) }.max()!!
-            if (newCenter.distance(newPoint) <= radius) {
-                inHexagon.add(newPoint)
-                center = newCenter
-                break
+        if (newPoint.distance(center) > radius) {
+            for (newCenter in pathBetweenHexes(center, newPoint)) {
+                radius = inHexagon.map { it.distance(newCenter) }.max()!!
+                if (newCenter.distance(newPoint) <= radius) {
+                    inHexagon.add(newPoint)
+                    center = newCenter
+                    break
+                }
             }
         }
+        inHexagon.add(newPoint)
         allPoints.remove(newPoint)
     }
+    println(radius)
     return Hexagon(center, radius)
 }

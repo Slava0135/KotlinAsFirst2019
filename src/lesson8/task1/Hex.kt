@@ -295,35 +295,12 @@ fun parse(input: String): Array<HexPoint> {
     return result
 }
 
-fun minContainingHexagonMax(vararg points: HexPoint): Hexagon {
+fun minContainingHexagonTry(min: Boolean, vararg points: HexPoint): Hexagon {
     require(points.isNotEmpty())
     val allPoints = points.toMutableSet()
-    var center = allPoints.maxBy { hex -> allPoints.map { it.distance(hex) }.max()!! }!!
-    var radius = 0
-    val inHexagon = mutableListOf(center)
-    allPoints.remove(center)
-    while (allPoints.isNotEmpty()) {
-        val newPoint = allPoints.maxBy { it.distance(center) }!!
-        if (newPoint.distance(center) > radius) {
-            for (newCenter in pathBetweenHexes(center, newPoint)) {
-                radius = inHexagon.map { it.distance(newCenter) }.max()!!
-                if (newCenter.distance(newPoint) <= radius) {
-                    inHexagon.add(newPoint)
-                    center = newCenter
-                    break
-                }
-            }
-        }
-        inHexagon.add(newPoint)
-        allPoints.remove(newPoint)
-    }
-    return Hexagon(center, radius)
-}
-
-fun minContainingHexagonMin(vararg points: HexPoint): Hexagon {
-    require(points.isNotEmpty())
-    val allPoints = points.toMutableSet()
-    var center = allPoints.minBy { hex -> allPoints.map { it.distance(hex) }.max()!! }!!
+    var center =
+        if (min) allPoints.minBy { hex -> allPoints.map { it.distance(hex) }.max()!! }!!
+        else allPoints.maxBy { hex -> allPoints.map { it.distance(hex) }.max()!! }!!
     var radius = 0
     val inHexagon = mutableListOf(center)
     allPoints.remove(center)
@@ -346,4 +323,4 @@ fun minContainingHexagonMin(vararg points: HexPoint): Hexagon {
 }
 
 fun minContainingHexagon(vararg points: HexPoint) =
-    listOf(minContainingHexagonMin(*points), minContainingHexagonMax(*points)).minBy { it.radius}!!
+    listOf(minContainingHexagonTry(true, *points), minContainingHexagonTry(false, *points)).minBy { it.radius}!!

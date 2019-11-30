@@ -297,26 +297,31 @@ fun parse(input: String): Array<HexPoint> {
 
 fun minContainingHexagon(vararg points: HexPoint): Hexagon {
     require(points.isNotEmpty())
-    val allPoints = points.toMutableSet()
-    var center =
-        allPoints.minBy { hexPoint -> allPoints.map { it.distance(hexPoint) * it.distance(hexPoint) }.sum() }!!
-    var radius = 0
-    val inHexagon = mutableListOf(center)
-    allPoints.remove(center)
-    while (allPoints.isNotEmpty()) {
-        val newPoint = allPoints.maxBy { it.distance(center) }!!
-        if (newPoint.distance(center) > radius) {
-            for (newCenter in pathBetweenHexes(center, newPoint)) {
-                radius = inHexagon.map { it.distance(newCenter) }.max()!!
-                if (newCenter.distance(newPoint) <= radius) {
-                    inHexagon.add(newPoint)
-                    center = newCenter
-                    break
+    var result: Hexagon? = null
+    for (point in points) {
+        var center = point
+        val allPoints = points.toMutableSet()
+        var radius = 0
+        val inHexagon = mutableListOf(center)
+        allPoints.remove(center)
+        while (allPoints.isNotEmpty()) {
+            val newPoint = allPoints.maxBy { it.distance(center) }!!
+            if (newPoint.distance(center) > radius) {
+                for (newCenter in pathBetweenHexes(center, newPoint)) {
+                    radius = inHexagon.map { it.distance(newCenter) }.max()!!
+                    if (newCenter.distance(newPoint) <= radius) {
+                        inHexagon.add(newPoint)
+                        center = newCenter
+                        break
+                    }
                 }
             }
+            inHexagon.add(newPoint)
+            allPoints.remove(newPoint)
         }
-        inHexagon.add(newPoint)
-        allPoints.remove(newPoint)
+        if (result == null || radius < result.radius) {
+            result = Hexagon(center, radius)
+        }
     }
-    return Hexagon(center, radius)
+    return result!!
 }

@@ -175,5 +175,29 @@ class HexTests {
         val anotherResult = minContainingHexagon(*anotherPoints)
         assertTrue(1244 > anotherResult.radius)
         assertTrue(anotherPoints.all { anotherResult.contains(it) })
+        val points1 = arrayOf(
+            HexPoint(-404, -957),
+            HexPoint(-558, -557),
+            HexPoint(-1000, -558),
+            HexPoint(-657, -558),
+            HexPoint(-1000, 604),
+            HexPoint(-557, -33),
+            HexPoint(-892, -558),
+            HexPoint(-928, -592),
+            HexPoint(-680, -1000),
+            HexPoint(-1000, -999),
+            HexPoint(-557, -463),
+            HexPoint(-860, -557),
+            HexPoint(-1000, -558),
+            HexPoint(-341, -999),
+            HexPoint(-558, -870),
+            HexPoint(-1000, -557),
+            HexPoint(853, -848),
+            HexPoint(384, -999),
+            HexPoint(-999, 993),
+            HexPoint(-651, -999)
+        )
+        val result1 = minContainingHexagon(*points1)
+        assertTrue(1340 >= result1.radius)
     }
 }

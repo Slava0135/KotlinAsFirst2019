@@ -620,14 +620,34 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
         playGrid.numReplace(14, 15)
     }
 
-    fun hash(grid: Matrix<Int>): String {
-        val map = mutableListOf<Int>()
-        for (row in 0..3) {
-            for (col in 0..3) {
-                map.add(grid[row, col])
+    fun hash(grid: Matrix<Int>): Pair<Long, Long> {
+        var first: Long = 0
+        var count = 0
+        for (i in 0..1) {
+            for (j in 0..3) {
+                val num = grid[i, j]
+                var sum = num
+                for (k in 0 until count) {
+                    sum *= 16
+                }
+                first += sum
+                count++
             }
         }
-        return map.joinToString("|")
+        var second: Long = 0
+        count = 0
+        for (i in 2..3) {
+            for (j in 0..3) {
+                val num = grid[i, j]
+                var sum = num
+                for (k in 0 until count) {
+                    sum *= 16
+                }
+                second += sum
+                count++
+            }
+        }
+        return Pair(first, second)
     }
 
     fun upDist(grid: Matrix<Int>): Int {
@@ -646,15 +666,15 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
 
     if (upDist(playGrid.grid) == 0) return emptyList()
 
-    class Node(val playGrid: PlayGrid, val dist: Int, val hash: String)
+    class Node(val playGrid: PlayGrid, val dist: Int, val hash: Pair<Long, Long>)
 
     val firstHash = hash(playGrid.grid)
-    val connections = mutableMapOf(firstHash to Pair("", 0))
+    val connections = mutableMapOf(firstHash to Pair(Pair<Long, Long>(0, 0), 0))
     val hashes = hashSetOf(firstHash)
     val nodes = PriorityQueue<Node>(compareBy { it.dist })
     nodes.add(Node(playGrid, upDist(playGrid.grid), firstHash))
 
-    fun findWay(hash: String): List<Int> {
+    fun findWay(hash: Pair<Long, Long>): List<Int> {
         var nextHash = hash
         val moves = mutableListOf<Int>()
         while (nextHash != firstHash) {

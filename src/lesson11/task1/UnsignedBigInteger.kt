@@ -13,6 +13,8 @@ package lesson11.task1
  */
 class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
 
+    val data = mutableListOf(0)
+
     /**
      * Конструктор из ничего
      */

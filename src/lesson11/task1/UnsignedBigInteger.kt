@@ -16,6 +16,9 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
     /**
      * Конструктор из строки
      */
+
+    val data = mutableListOf<Int>()
+
     constructor(s: String) {
         TODO()
     }
@@ -72,5 +75,9 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
      * Если число не влезает в диапазон Int, бросить ArithmeticException
      */
     fun toInt(): Int = TODO()
+
+    override fun hashCode(): Int {
+        return javaClass.hashCode()
+    }
 
 }

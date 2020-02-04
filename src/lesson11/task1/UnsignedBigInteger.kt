@@ -1,5 +1,7 @@
 package lesson11.task1
 
+import java.lang.ArithmeticException
+
 /**
  * Класс "беззнаковое большое целое число".
  *
@@ -13,19 +15,24 @@ package lesson11.task1
  */
 class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
 
+    private val base = Int.MAX_VALUE.toLong() + 1
+    private val data = mutableListOf(0)
 
     /**
      * Конструктор из строки
      */
+
     constructor(s: String) {
-        TODO()
+        require(s.matches(Regex("""\d+""")))
+        val sBase = 10
     }
 
     /**
      * Конструктор из целого
      */
     constructor(i: Int) {
-        TODO()
+        require(i >= 0)
+        data[0] = i
     }
 
     /**
@@ -56,12 +63,25 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
     /**
      * Сравнение на равенство (по контракту Any.equals)
      */
-    override fun equals(other: Any?): Boolean = TODO()
+    override fun equals(other: Any?): Boolean =
+        (other is UnsignedBigInteger && data == other.data)
 
     /**
      * Сравнение на больше/меньше (по контракту Comparable.compareTo)
      */
-    override fun compareTo(other: UnsignedBigInteger): Int = TODO()
+    override fun compareTo(other: UnsignedBigInteger): Int {
+        when {
+            data.size > other.data.size -> return 1
+            data.size < other.data.size -> return -1
+            else -> {
+                for (i in data.indices.reversed()) {
+                    if (data[i] > other.data[i]) return 1
+                    if (data[i] > other.data[i]) return -1
+                }
+                return 0
+            }
+        }
+    }
 
     /**
      * Преобразование в строку
@@ -72,6 +92,7 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
      * Преобразование в целое
      * Если число не влезает в диапазон Int, бросить ArithmeticException
      */
-    fun toInt(): Int = TODO()
-
+    fun toInt() =
+        if (data.size > 1) throw ArithmeticException()
+        else data[0]
 }

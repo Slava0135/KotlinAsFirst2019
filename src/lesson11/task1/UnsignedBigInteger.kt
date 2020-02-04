@@ -1,6 +1,7 @@
 package lesson11.task1
 
 import java.lang.ArithmeticException
+import java.lang.Integer.min
 
 /**
  * Класс "беззнаковое большое целое число".
@@ -15,16 +16,17 @@ import java.lang.ArithmeticException
  */
 class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
 
-    private val base = Int.MAX_VALUE.toLong() + 1
-    private val data = mutableListOf(0)
+    private val base = 1000000000
+    private val maxDigitSize = 9
+    private val data: List<Int>
 
     /**
      * Конструктор из строки
      */
 
     constructor(s: String) {
-        require(s.matches(Regex("""\d+""")))
-        val sBase = 10
+        require(s.matches(Regex("""\d*""")))
+        data = s.chunked(maxDigitSize).map { it.toInt() }
     }
 
     /**
@@ -32,13 +34,15 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
      */
     constructor(i: Int) {
         require(i >= 0)
-        data[0] = i
+        data = listOf(i)
     }
 
     /**
      * Сложение
      */
-    operator fun plus(other: UnsignedBigInteger): UnsignedBigInteger = TODO()
+    operator fun plus(other: UnsignedBigInteger): UnsignedBigInteger {
+        TODO()
+    }
 
     /**
      * Вычитание (бросить ArithmeticException, если this < other)
@@ -86,7 +90,7 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
     /**
      * Преобразование в строку
      */
-    override fun toString(): String = TODO()
+    override fun toString(): String = data.joinToString("")
 
     /**
      * Преобразование в целое

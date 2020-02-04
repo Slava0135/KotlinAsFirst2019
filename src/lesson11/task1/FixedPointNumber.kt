@@ -20,7 +20,7 @@ class FixedPointNumber : Comparable<FixedPointNumber> {
     /**
      * Точность - число десятичных цифр после запятой.
      */
-    val precision: Int get() = TODO()
+    val precision: Int get() = 0
 
     /**
      * Конструктор из строки, точность выбирается в соответствии
@@ -31,21 +31,18 @@ class FixedPointNumber : Comparable<FixedPointNumber> {
      * Внимание: этот или другой конструктор можно сделать основным
      */
     constructor(s: String) {
-        TODO()
     }
 
     /**
      * Конструктор из вещественного числа с заданной точностью
      */
     constructor(d: Double, p: Int) {
-        TODO()
     }
 
     /**
      * Конструктор из целого числа (предполагает нулевую точность)
      */
     constructor(i: Int) {
-        TODO()
     }
 
     /**
@@ -55,45 +52,45 @@ class FixedPointNumber : Comparable<FixedPointNumber> {
      * точность результата выбирается как наибольшая точность аргументов.
      * Лишние знаки отрбрасываются, число округляется по правилам арифметики.
      */
-    operator fun plus(other: FixedPointNumber): FixedPointNumber = TODO()
+    operator fun plus(other: FixedPointNumber): FixedPointNumber = FixedPointNumber("")
 
     /**
      * Смена знака
      */
-    operator fun unaryMinus(): FixedPointNumber = TODO()
+    operator fun unaryMinus(): FixedPointNumber = FixedPointNumber("")
 
     /**
      * Вычитание
      */
-    operator fun minus(other: FixedPointNumber): FixedPointNumber = TODO()
+    operator fun minus(other: FixedPointNumber): FixedPointNumber = FixedPointNumber("")
 
     /**
      * Умножение
      */
-    operator fun times(other: FixedPointNumber): FixedPointNumber = TODO()
+    operator fun times(other: FixedPointNumber): FixedPointNumber = FixedPointNumber("")
 
     /**
      * Деление
      */
-    operator fun div(other: FixedPointNumber): FixedPointNumber = TODO()
+    operator fun div(other: FixedPointNumber): FixedPointNumber = FixedPointNumber("")
 
     /**
      * Сравнение на равенство
      */
-    override fun equals(other: Any?): Boolean = TODO()
+    override fun equals(other: Any?): Boolean = true
 
     /**
      * Сравнение на больше/меньше
      */
-    override fun compareTo(other: FixedPointNumber): Int = TODO()
+    override fun compareTo(other: FixedPointNumber): Int = 0
 
     /**
      * Преобразование в строку
      */
-    override fun toString(): String = TODO()
+    override fun toString(): String = ""
 
     /**
      * Преобразование к вещественному числу
      */
-    fun toDouble(): Double = TODO()
+    fun toDouble(): Double = 0.0
 }

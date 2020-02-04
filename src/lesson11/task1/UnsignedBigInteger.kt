@@ -14,67 +14,71 @@ package lesson11.task1
 class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
 
     /**
+     * Конструктор из ничего
+     */
+    constructor() {
+    }
+
+    /**
      * Конструктор из строки
      */
 
     val data = mutableListOf<Int>()
 
     constructor(s: String) {
-        TODO()
     }
 
     /**
      * Конструктор из целого
      */
     constructor(i: Int) {
-        TODO()
     }
 
     /**
      * Сложение
      */
-    operator fun plus(other: UnsignedBigInteger): UnsignedBigInteger = TODO()
+    operator fun plus(other: UnsignedBigInteger): UnsignedBigInteger = UnsignedBigInteger()
 
     /**
      * Вычитание (бросить ArithmeticException, если this < other)
      */
-    operator fun minus(other: UnsignedBigInteger): UnsignedBigInteger = TODO()
+    operator fun minus(other: UnsignedBigInteger): UnsignedBigInteger = UnsignedBigInteger()
 
     /**
      * Умножение
      */
-    operator fun times(other: UnsignedBigInteger): UnsignedBigInteger = TODO()
+    operator fun times(other: UnsignedBigInteger): UnsignedBigInteger = UnsignedBigInteger()
 
     /**
      * Деление
      */
-    operator fun div(other: UnsignedBigInteger): UnsignedBigInteger = TODO()
+    operator fun div(other: UnsignedBigInteger): UnsignedBigInteger = UnsignedBigInteger()
 
     /**
      * Взятие остатка
      */
-    operator fun rem(other: UnsignedBigInteger): UnsignedBigInteger = TODO()
+    operator fun rem(other: UnsignedBigInteger): UnsignedBigInteger = UnsignedBigInteger()
 
     /**
      * Сравнение на равенство (по контракту Any.equals)
      */
-    override fun equals(other: Any?): Boolean = TODO()
+    override fun equals(other: Any?): Boolean = true
 
     /**
      * Сравнение на больше/меньше (по контракту Comparable.compareTo)
      */
-    override fun compareTo(other: UnsignedBigInteger): Int = TODO()
+    override fun compareTo(other: UnsignedBigInteger): Int = 0
 
     /**
      * Преобразование в строку
      */
-    override fun toString(): String = TODO()
+    override fun toString(): String = ""
 
     /**
      * Преобразование в целое
      * Если число не влезает в диапазон Int, бросить ArithmeticException
      */
-    fun toInt(): Int = TODO()
+    fun toInt(): Int = 0
 
     override fun hashCode(): Int {
         return javaClass.hashCode()

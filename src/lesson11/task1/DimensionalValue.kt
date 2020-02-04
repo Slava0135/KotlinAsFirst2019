@@ -20,58 +20,58 @@ class DimensionalValue(value: Double, dimension: String) : Comparable<Dimensiona
     /**
      * Величина с БАЗОВОЙ размерностью (например для 1.0Kg следует вернуть результат в граммах -- 1000.0)
      */
-    val value: Double get() = 0.0
+    val value: Double get() = TODO()
 
     /**
      * БАЗОВАЯ размерность (опять-таки для 1.0Kg следует вернуть GRAM)
      */
-    val dimension: Dimension get() = Dimension.GRAM
+    val dimension: Dimension get() = TODO()
 
     /**
      * Конструктор из строки. Формат строки: значение пробел размерность (1 Kg, 3 mm, 100 g и так далее).
      */
-    constructor(s: String) : this(0.0, "")
+    constructor(s: String) : this(TODO(), TODO())
 
     /**
      * Сложение с другой величиной. Если базовая размерность разная, бросить IllegalArgumentException
      * (нельзя складывать метры и килограммы)
      */
-    operator fun plus(other: DimensionalValue): DimensionalValue = DimensionalValue(0.0, "")
+    operator fun plus(other: DimensionalValue): DimensionalValue = TODO()
 
     /**
      * Смена знака величины
      */
-    operator fun unaryMinus(): DimensionalValue = DimensionalValue(0.0, "")
+    operator fun unaryMinus(): DimensionalValue = TODO()
 
     /**
      * Вычитание другой величины. Если базовая размерность разная, бросить IllegalArgumentException
      */
-    operator fun minus(other: DimensionalValue): DimensionalValue = DimensionalValue(0.0, "")
+    operator fun minus(other: DimensionalValue): DimensionalValue = TODO()
 
     /**
      * Умножение на число
      */
-    operator fun times(other: Double): DimensionalValue = DimensionalValue(0.0, "")
+    operator fun times(other: Double): DimensionalValue = TODO()
 
     /**
      * Деление на число
      */
-    operator fun div(other: Double): DimensionalValue = DimensionalValue(0.0, "")
+    operator fun div(other: Double): DimensionalValue = TODO()
 
     /**
      * Деление на другую величину. Если базовая размерность разная, бросить IllegalArgumentException
      */
-    operator fun div(other: DimensionalValue): Double = 0.0
+    operator fun div(other: DimensionalValue): Double = TODO()
 
     /**
      * Сравнение на равенство
      */
-    override fun equals(other: Any?): Boolean = true
+    override fun equals(other: Any?): Boolean = TODO()
 
     /**
      * Сравнение на больше/меньше. Если базовая размерность разная, бросить IllegalArgumentException
      */
-    override fun compareTo(other: DimensionalValue): Int = 0
+    override fun compareTo(other: DimensionalValue): Int = TODO()
 }
 
 /**

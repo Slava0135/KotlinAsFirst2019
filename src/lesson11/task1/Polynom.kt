@@ -24,12 +24,12 @@ class Polynom(vararg coeffs: Double) {
     /**
      * Геттер: вернуть значение коэффициента при x^i
      */
-    fun coeff(i: Int): Double = 0.0
+    fun coeff(i: Int): Double = TODO()
 
     /**
      * Расчёт значения при заданном x
      */
-    fun getValue(x: Double): Double = 0.0
+    fun getValue(x: Double): Double = TODO()
 
     /**
      * Степень (максимальная степень x при ненулевом слагаемом, например 2 для x^2+x+1).
@@ -38,27 +38,27 @@ class Polynom(vararg coeffs: Double) {
      * Слагаемые с нулевыми коэффициентами игнорировать, т.е.
      * степень 0x^2+0x+2 также равна 0.
      */
-    fun degree(): Int = 0
+    fun degree(): Int = TODO()
 
     /**
      * Сложение
      */
-    operator fun plus(other: Polynom): Polynom = Polynom()
+    operator fun plus(other: Polynom): Polynom = TODO()
 
     /**
      * Смена знака (при всех слагаемых)
      */
-    operator fun unaryMinus(): Polynom = Polynom()
+    operator fun unaryMinus(): Polynom = TODO()
 
     /**
      * Вычитание
      */
-    operator fun minus(other: Polynom): Polynom = Polynom()
+    operator fun minus(other: Polynom): Polynom = TODO()
 
     /**
      * Умножение
      */
-    operator fun times(other: Polynom): Polynom = Polynom()
+    operator fun times(other: Polynom): Polynom = TODO()
 
     /**
      * Деление
@@ -68,20 +68,20 @@ class Polynom(vararg coeffs: Double) {
      *
      * Если A / B = C и A % B = D, то A = B * C + D и степень D меньше степени B
      */
-    operator fun div(other: Polynom): Polynom = Polynom()
+    operator fun div(other: Polynom): Polynom = TODO()
 
     /**
      * Взятие остатка
      */
-    operator fun rem(other: Polynom): Polynom = Polynom()
+    operator fun rem(other: Polynom): Polynom = TODO()
 
     /**
      * Сравнение на равенство
      */
-    override fun equals(other: Any?): Boolean = true
+    override fun equals(other: Any?): Boolean = TODO()
 
     /**
      * Получение хеш-кода
      */
-    override fun hashCode(): Int = 0
+    override fun hashCode(): Int = TODO()
 }

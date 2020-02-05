@@ -95,7 +95,7 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
             val part = other.data.map { digit.toLong() * it }.toMutableList()
             for (i in 0 until part.size - 1) {
                 if (part[i] >= base) {
-                    part[i + 1] = part[i] / base
+                    part[i + 1] += part[i] / base
                     part[i] = part[i] % base
                 }
             }

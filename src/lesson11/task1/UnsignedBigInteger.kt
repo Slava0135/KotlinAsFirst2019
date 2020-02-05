@@ -42,7 +42,10 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
         data = l
     }
 
-    private fun operation(other: UnsignedBigInteger, mode: Int): UnsignedBigInteger {
+    private fun operation(
+        other: UnsignedBigInteger,
+        mode: Int
+    ): UnsignedBigInteger { //mode = 1 is add and mode = -1 is subtract
         val summary = MutableList(max(other.data.size, data.size)) { 0 }
         for (i in data.indices) {
             summary[i] = data[i]
@@ -96,7 +99,7 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
     /**
      * Взятие остатка
      */
-    operator fun rem(other: UnsignedBigInteger): UnsignedBigInteger = TODO()
+    operator fun rem(other: UnsignedBigInteger): UnsignedBigInteger = this - (this / other) * other
 
     /**
      * Сравнение на равенство (по контракту Any.equals)

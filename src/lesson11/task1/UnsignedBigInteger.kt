@@ -133,7 +133,7 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
             } else lst.add(digit.toString())
         }
         lst.add(data.last().toString())
-        return lst.joinToString("")
+        return lst.reversed().joinToString("")
     }
 
     /**

@@ -124,7 +124,17 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
     /**
      * Преобразование в строку
      */
-    override fun toString(): String = data.reversed().joinToString("")
+    override fun toString(): String {
+        val lst = mutableListOf<String>()
+        for (i in 0 until data.size - 1) {
+            val digit = data[i]
+            if (digit == 0) {
+                lst.add("0".repeat(maxDigitSize))
+            } else lst.add(digit.toString())
+        }
+        lst.add(data.last().toString())
+        return lst.joinToString("")
+    }
 
     /**
      * Преобразование в целое

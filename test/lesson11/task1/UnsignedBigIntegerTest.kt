@@ -14,6 +14,7 @@ internal class UnsignedBigIntegerTest {
         assertEquals(UnsignedBigInteger(4), UnsignedBigInteger(2) + UnsignedBigInteger(2))
         assertEquals(UnsignedBigInteger("9087654330"), UnsignedBigInteger("9087654329") + UnsignedBigInteger(1))
         assertEquals(UnsignedBigInteger("1000000000"), UnsignedBigInteger("999999999") + UnsignedBigInteger(1))
+        assertEquals(UnsignedBigInteger("1" + "000000000" + "000000000"), UnsignedBigInteger("999999999" + "999999999") + UnsignedBigInteger(1))
     }
 
     @Test

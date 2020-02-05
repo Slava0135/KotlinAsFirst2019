@@ -50,6 +50,22 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
         for (i in other.data.indices) {
             summary[i] += mode * other.data[i]
         }
+        for (i in 0 until summary.size - 1) {
+            if (summary[i] >= base || summary[i] < 0) {
+                summary[i] -= mode * base
+                summary[i + 1] += mode
+            }
+        }
+        if (mode == 1) {
+            if (summary.last() >= base) {
+                summary[summary.size - 1] -= base
+                summary.add(1)
+            }
+        } else {
+            if (summary.last() == 0 && summary.size > 1) {
+                summary.removeAt(summary.size - 1)
+            }
+        }
         return UnsignedBigInteger(summary)
     }
 
@@ -108,7 +124,7 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
     /**
      * Преобразование в строку
      */
-    override fun toString(): String = data.joinToString("")
+    override fun toString(): String = data.reversed().joinToString("")
 
     /**
      * Преобразование в целое

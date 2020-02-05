@@ -13,6 +13,7 @@ internal class UnsignedBigIntegerTest {
     fun plus() {
         assertEquals(UnsignedBigInteger(4), UnsignedBigInteger(2) + UnsignedBigInteger(2))
         assertEquals(UnsignedBigInteger("9087654330"), UnsignedBigInteger("9087654329") + UnsignedBigInteger(1))
+        assertEquals(UnsignedBigInteger("1000000000"), UnsignedBigInteger("999999999") + UnsignedBigInteger(1))
     }
 
     @Test
@@ -20,6 +21,8 @@ internal class UnsignedBigIntegerTest {
     fun minus() {
         assertEquals(UnsignedBigInteger(2), UnsignedBigInteger(4) - UnsignedBigInteger(2))
         assertEquals(UnsignedBigInteger("9087654329"), UnsignedBigInteger("9087654330") - UnsignedBigInteger(1))
+        assertEquals(UnsignedBigInteger("999999999"), UnsignedBigInteger("1000000000") - UnsignedBigInteger(1))
+        assertEquals(UnsignedBigInteger(0), UnsignedBigInteger(1) - UnsignedBigInteger(1))
         assertThrows(ArithmeticException::class.java) {
             UnsignedBigInteger(2) - UnsignedBigInteger(4)
         }

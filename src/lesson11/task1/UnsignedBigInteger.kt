@@ -2,6 +2,7 @@ package lesson11.task1
 
 import java.lang.ArithmeticException
 import java.lang.Integer.min
+import kotlin.math.max
 
 /**
  * Класс "беззнаковое большое целое число".
@@ -26,7 +27,7 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
 
     constructor(s: String) {
         require(s.matches(Regex("""\d*""")))
-        data = s.chunked(maxDigitSize).map { it.toInt() }
+        data = s.reversed().chunked(maxDigitSize) { digit: CharSequence -> digit.reversed().toString().toInt() }
     }
 
     /**
@@ -37,16 +38,28 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
         data = listOf(i)
     }
 
+    private constructor(l: List<Int>) {
+        data = l
+    }
+
     /**
      * Сложение
      */
     operator fun plus(other: UnsignedBigInteger): UnsignedBigInteger {
-        TODO()
+        val summary = MutableList(max(other.data.size, data.size)) { 0 }
+        for (i in data.indices) {
+            summary[i] = data[i]
+        }
+        for (i in other.data.indices) {
+            summary[i] += other.data[i]
+        }
+        return UnsignedBigInteger(summary)
     }
 
     /**
      * Вычитание (бросить ArithmeticException, если this < other)
      */
+
     operator fun minus(other: UnsignedBigInteger): UnsignedBigInteger = TODO()
 
     /**
@@ -78,7 +91,7 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
             data.size > other.data.size -> return 1
             data.size < other.data.size -> return -1
             else -> {
-                for (i in data.indices.reversed()) {
+                for (i in data.indices) {
                     if (data[i] > other.data[i]) return 1
                     if (data[i] > other.data[i]) return -1
                 }
@@ -98,5 +111,5 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
      */
     fun toInt() =
         if (data.size > 1) throw ArithmeticException()
-        else data[0]
+        else data.last()
 }

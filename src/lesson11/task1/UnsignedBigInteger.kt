@@ -1,7 +1,6 @@
 package lesson11.task1
 
 import java.lang.ArithmeticException
-import java.lang.Integer.min
 import kotlin.math.max
 
 /**
@@ -26,7 +25,7 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
      */
 
     constructor(s: String) {
-        require(s.matches(Regex("""\d*""")))
+        require(s.matches(Regex("""[0-9]+""")))
         data = s.reversed().chunked(maxDigitSize) { digit: CharSequence -> digit.reversed().toString().toInt() }
     }
 
@@ -35,7 +34,8 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
      */
     constructor(i: Int) {
         require(i >= 0)
-        data = listOf(i)
+        data =
+            i.toString().reversed().chunked(maxDigitSize) { digit: CharSequence -> digit.reversed().toString().toInt() }
     }
 
     private constructor(l: List<Int>) {
@@ -89,7 +89,31 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
     /**
      * Умножение
      */
-    operator fun times(other: UnsignedBigInteger): UnsignedBigInteger = TODO()
+    operator fun times(other: UnsignedBigInteger): UnsignedBigInteger {
+        val list = mutableListOf<UnsignedBigInteger>()
+        for ((count, digit) in data.withIndex()) {
+            val part = other.data.map { digit.toLong() * it }.toMutableList()
+            for (i in 0 until part.size - 1) {
+                if (part[i] >= base) {
+                    part[i + 1] = part[i] / base
+                    part[i] = part[i] % base
+                }
+            }
+            if (part.last() >= base) {
+                part.add(part.last() / base)
+                part[part.size - 2] = part[part.size - 2] % base
+            }
+            for (i in 0 until count) {
+                part.add(0, 0)
+            }
+            list.add(UnsignedBigInteger(part.map { it.toInt() }))
+        }
+        var result = UnsignedBigInteger(0)
+        for (elem in list) {
+            result += elem
+        }
+        return result
+    }
 
     /**
      * Деление
@@ -143,7 +167,14 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
      * Преобразование в целое
      * Если число не влезает в диапазон Int, бросить ArithmeticException
      */
-    fun toInt() =
-        if (data.size > 1) throw ArithmeticException()
-        else data.last()
+    fun toInt(): Int {
+        if (data.size > 2) throw ArithmeticException()
+        if (data.size == 1) return data[0]
+        else {
+            val sum = data[0] + data[1] * base
+            if (sum > Int.MAX_VALUE) throw ArithmeticException()
+            else return sum.toInt()
+        }
+
+    }
 }

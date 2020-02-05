@@ -33,8 +33,12 @@ internal class UnsignedBigIntegerTest {
     @Tag("Hard")
     fun times() {
         assertEquals(
+            UnsignedBigInteger("10000000000000000"),
+            UnsignedBigInteger(100000000) * UnsignedBigInteger(100000000)
+        )
+        assertEquals(
             UnsignedBigInteger("18446744073709551616"),
-            UnsignedBigInteger("4294967296‬") * UnsignedBigInteger("4294967296‬")
+            UnsignedBigInteger("4294967296") * UnsignedBigInteger("4294967296")
         )
     }
 
@@ -74,5 +78,6 @@ internal class UnsignedBigIntegerTest {
     @Tag("Normal")
     fun toInt() {
         assertEquals(123456789, UnsignedBigInteger("123456789").toInt())
+        assertEquals(Int.MAX_VALUE, UnsignedBigInteger(Int.MAX_VALUE).toInt())
     }
 }

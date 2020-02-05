@@ -42,25 +42,30 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
         data = l
     }
 
-    /**
-     * Сложение
-     */
-    operator fun plus(other: UnsignedBigInteger): UnsignedBigInteger {
+    private fun operation(other: UnsignedBigInteger, mode: Int): UnsignedBigInteger {
         val summary = MutableList(max(other.data.size, data.size)) { 0 }
         for (i in data.indices) {
             summary[i] = data[i]
         }
         for (i in other.data.indices) {
-            summary[i] += other.data[i]
+            summary[i] += mode * other.data[i]
         }
         return UnsignedBigInteger(summary)
     }
 
     /**
+     * Сложение
+     */
+    operator fun plus(other: UnsignedBigInteger): UnsignedBigInteger = operation(other, 1)
+
+    /**
      * Вычитание (бросить ArithmeticException, если this < other)
      */
 
-    operator fun minus(other: UnsignedBigInteger): UnsignedBigInteger = TODO()
+    operator fun minus(other: UnsignedBigInteger): UnsignedBigInteger {
+        if (this < other) throw ArithmeticException()
+        return operation(other, -1)
+    }
 
     /**
      * Умножение
@@ -93,7 +98,7 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
             else -> {
                 for (i in data.indices) {
                     if (data[i] > other.data[i]) return 1
-                    if (data[i] > other.data[i]) return -1
+                    if (data[i] < other.data[i]) return -1
                 }
                 return 0
             }

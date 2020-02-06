@@ -124,26 +124,19 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
                 digits.add(0, 0)
             }
             val digit = UnsignedBigInteger(digits)
-            var possibleMultiplier = UnsignedBigInteger(0)
             while (upBorder - downBorder > 1) {
                 val middle = (upBorder + downBorder) / 2
-                possibleMultiplier = digit * UnsignedBigInteger(middle)
-                if (possibleMultiplier > this) {
-                    upBorder = middle
+                val possibleMultiplier = digit * UnsignedBigInteger(middle)
+                if (possibleMultiplier > num) {
+                    upBorder = middle - 1
                 } else {
                     downBorder = middle
                 }
             }
-            if (digit * UnsignedBigInteger(upBorder) < other) {
-                possibleMultiplier = digit * UnsignedBigInteger(upBorder)
-                result.add(upBorder)
-            } else {
-                result.add(downBorder)
-            }
-            num -= possibleMultiplier
+            result.add(downBorder)
+            num -= digit * UnsignedBigInteger(downBorder)
             digitNum--
         }
-
         return UnsignedBigInteger(result.reversed())
     }
 
@@ -166,7 +159,7 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
             data.size > other.data.size -> return 1
             data.size < other.data.size -> return -1
             else -> {
-                for (i in data.indices) {
+                for (i in data.indices.reversed()) {
                     if (data[i] > other.data[i]) return 1
                     if (data[i] < other.data[i]) return -1
                 }

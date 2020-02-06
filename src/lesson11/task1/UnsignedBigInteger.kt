@@ -197,4 +197,6 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
         }
 
     }
+
+    override fun hashCode(): Int = data.hashCode()
 }

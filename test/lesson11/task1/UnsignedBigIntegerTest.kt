@@ -57,7 +57,7 @@ internal class UnsignedBigIntegerTest {
         assertEquals(UnsignedBigInteger(5), UnsignedBigInteger(19) % UnsignedBigInteger(7))
         assertEquals(
             UnsignedBigInteger(0),
-            UnsignedBigInteger("18446744073709551616") % UnsignedBigInteger("4294967296‬")
+            UnsignedBigInteger("18446744073709551616") % UnsignedBigInteger("4294967296")
         )
     }
 

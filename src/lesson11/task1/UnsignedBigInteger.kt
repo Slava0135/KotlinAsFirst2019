@@ -189,11 +189,11 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
      */
     fun toInt(): Int {
         if (data.size > 2) throw ArithmeticException()
-        if (data.size == 1) return data[0]
+        return if (data.size == 1) data[0]
         else {
             val sum = data[0] + data[1] * base
             if (sum > Int.MAX_VALUE) throw ArithmeticException()
-            else return sum.toInt()
+            else sum
         }
 
     }

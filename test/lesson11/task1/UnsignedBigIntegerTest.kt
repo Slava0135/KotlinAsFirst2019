@@ -46,8 +46,8 @@ internal class UnsignedBigIntegerTest {
     @Tag("Impossible")
     fun div() {
         assertEquals(
-            UnsignedBigInteger("4294967296‬"),
-            UnsignedBigInteger("18446744073709551616") / UnsignedBigInteger("4294967296‬")
+            UnsignedBigInteger("4294967296"),
+            UnsignedBigInteger("18446744073709551616") / UnsignedBigInteger("4294967296")
         )
     }
 

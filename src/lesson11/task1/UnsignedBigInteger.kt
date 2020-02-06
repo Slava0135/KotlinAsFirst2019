@@ -25,7 +25,7 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
      */
 
     constructor(s: String) {
-        require(s.matches(Regex("""[0-9]+""")))
+        require(s.matches(Regex("""\d+""")))
         data = s.reversed().chunked(maxDigitSize) { digit: CharSequence -> digit.reversed().toString().toInt() }
     }
 
@@ -42,11 +42,8 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
         data = l
     }
 
-    private fun operation(
-        other: UnsignedBigInteger,
-        mode: Int
-    ): UnsignedBigInteger { //mode = 1 is add and mode = -1 is subtract
-        val summary = MutableList(max(other.data.size, data.size)) { 0 }
+    private fun operation(other: UnsignedBigInteger, mode: Int): UnsignedBigInteger {
+        val summary = MutableList(max(other.data.size, data.size)) { 0 } //mode = 1 is add and mode = -1 is subtract
         for (i in data.indices) {
             summary[i] = data[i]
         }
@@ -90,7 +87,7 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
      * Умножение
      */
     operator fun times(other: UnsignedBigInteger): UnsignedBigInteger {
-        val list = mutableListOf<UnsignedBigInteger>()
+        var result = UnsignedBigInteger(0)
         for ((count, digit) in data.withIndex()) {
             val part = other.data.map { digit.toLong() * it }.toMutableList()
             for (i in 0 until part.size - 1) {
@@ -106,11 +103,7 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
             for (i in 0 until count) {
                 part.add(0, 0)
             }
-            list.add(UnsignedBigInteger(part.map { it.toInt() }))
-        }
-        var result = UnsignedBigInteger(0)
-        for (elem in list) {
-            result += elem
+            result += UnsignedBigInteger(part.map { it.toInt() })
         }
         return result
     }
@@ -118,7 +111,41 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
     /**
      * Деление
      */
-    operator fun div(other: UnsignedBigInteger): UnsignedBigInteger = TODO()
+    operator fun div(other: UnsignedBigInteger): UnsignedBigInteger {
+        if (this < other) return UnsignedBigInteger(0)
+        var num = this
+        val result = mutableListOf<Int>()
+        var digitNum = this.data.size - other.data.size
+        while (num > other) {
+            var upBorder = base - 1
+            var downBorder = 0
+            val digits = other.data.toMutableList()
+            for (i in 0 until digitNum) {
+                digits.add(0, 0)
+            }
+            val digit = UnsignedBigInteger(digits)
+            var possibleMultiplier = UnsignedBigInteger(0)
+            while (upBorder - downBorder > 1) {
+                val middle = (upBorder + downBorder) / 2
+                possibleMultiplier = digit * UnsignedBigInteger(middle)
+                if (possibleMultiplier > this) {
+                    upBorder = middle
+                } else {
+                    downBorder = middle
+                }
+            }
+            if (digit * UnsignedBigInteger(upBorder) < other) {
+                possibleMultiplier = digit * UnsignedBigInteger(upBorder)
+                result.add(upBorder)
+            } else {
+                result.add(downBorder)
+            }
+            num -= possibleMultiplier
+            digitNum--
+        }
+
+        return UnsignedBigInteger(result.reversed())
+    }
 
     /**
      * Взятие остатка

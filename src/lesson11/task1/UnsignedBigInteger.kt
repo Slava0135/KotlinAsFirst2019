@@ -62,7 +62,7 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
                 summary.add(1)
             }
         } else {
-            if (summary.last() == 0 && summary.size > 1) {
+            while (summary.last() == 0 && summary.size > 1) {
                 summary.removeAt(summary.size - 1)
             }
         }

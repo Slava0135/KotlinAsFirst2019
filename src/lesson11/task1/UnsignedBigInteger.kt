@@ -133,6 +133,9 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
                     downBorder = middle
                 }
             }
+            if (digit * UnsignedBigInteger(upBorder) <= num) {
+                downBorder = upBorder
+            }
             result.add(downBorder)
             num -= digit * UnsignedBigInteger(downBorder)
             digitNum--

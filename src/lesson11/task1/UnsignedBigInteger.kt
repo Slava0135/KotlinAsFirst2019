@@ -23,7 +23,6 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
     /**
      * Конструктор из строки
      */
-
     constructor(s: String) {
         require(s.matches(Regex("""\d+""")))
         data = s.reversed().chunked(maxDigitSize) { digit: CharSequence -> digit.reversed().toString().toInt() }
@@ -42,8 +41,9 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
         data = l
     }
 
+    //mode = 1 is add and mode = -1 is subtract
     private fun operation(other: UnsignedBigInteger, mode: Int): UnsignedBigInteger {
-        val summary = MutableList(max(other.data.size, data.size)) { 0 } //mode = 1 is add and mode = -1 is subtract
+        val summary = MutableList(max(other.data.size, data.size)) { 0 }
         for (i in data.indices) {
             summary[i] = data[i]
         }
@@ -77,7 +77,6 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
     /**
      * Вычитание (бросить ArithmeticException, если this < other)
      */
-
     operator fun minus(other: UnsignedBigInteger): UnsignedBigInteger {
         if (this < other) throw ArithmeticException()
         return operation(other, -1)
@@ -198,7 +197,6 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
             if (sum > Int.MAX_VALUE) throw ArithmeticException()
             else sum
         }
-
     }
 
     override fun hashCode(): Int = data.hashCode()

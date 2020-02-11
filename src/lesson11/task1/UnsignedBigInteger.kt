@@ -16,7 +16,7 @@ import kotlin.math.max
  */
 class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
 
-    private val base = 1000000000
+    private val base = 1_000_000_000
     private val maxDigitSize = 9
     private val data: List<Int>
 
@@ -61,10 +61,9 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
                 summary[summary.size - 1] -= base
                 summary.add(1)
             }
-        } else {
-            while (summary.last() == 0 && summary.size > 1) {
-                summary.removeAt(summary.size - 1)
-            }
+        }
+        while (summary.last() == 0 && summary.size > 1) {
+            summary.removeAt(summary.size - 1)
         }
         return UnsignedBigInteger(summary)
     }
@@ -193,9 +192,9 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
         if (data.size > 2) throw ArithmeticException()
         return if (data.size == 1) data[0]
         else {
-            val sum = data[0] + data[1] * base
+            val sum = data[0] + data[1].toLong() * base
             if (sum > Int.MAX_VALUE) throw ArithmeticException()
-            else sum
+            else sum.toInt()
         }
     }
 

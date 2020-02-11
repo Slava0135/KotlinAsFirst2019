@@ -44,6 +44,14 @@ internal class UnsignedBigIntegerTest {
             UnsignedBigInteger("80779853376"),
             UnsignedBigInteger(123456) * UnsignedBigInteger(654321)
         )
+        assertEquals(
+            UnsignedBigInteger("4294967296"),
+            UnsignedBigInteger("4294967296") * UnsignedBigInteger(1)
+        )
+        assertEquals(
+            UnsignedBigInteger(0),
+            UnsignedBigInteger(0) * UnsignedBigInteger("11111111111111111111111111111111111111")
+        )
     }
 
     @Test
@@ -67,6 +75,14 @@ internal class UnsignedBigIntegerTest {
             UnsignedBigInteger(0),
             UnsignedBigInteger("18446744073709551616") % UnsignedBigInteger("4294967296")
         )
+        assertEquals(
+            UnsignedBigInteger(1),
+            UnsignedBigInteger("18446744073709551617") % UnsignedBigInteger("4294967296")
+        )
+        assertEquals(
+            UnsignedBigInteger("4294967295"),
+            UnsignedBigInteger("18446744073709551615") % UnsignedBigInteger("4294967296")
+        )
     }
 
     @Test
@@ -80,6 +96,8 @@ internal class UnsignedBigIntegerTest {
     fun compareTo() {
         assertTrue(UnsignedBigInteger(123456789) < UnsignedBigInteger("9876543210"))
         assertTrue(UnsignedBigInteger("9876543210") > UnsignedBigInteger(123456789))
+        assertTrue(UnsignedBigInteger("10000000000000") > UnsignedBigInteger(1000))
+        assertTrue(UnsignedBigInteger("999999999") == UnsignedBigInteger(999999999))
     }
 
     @Test
@@ -87,5 +105,9 @@ internal class UnsignedBigIntegerTest {
     fun toInt() {
         assertEquals(123456789, UnsignedBigInteger("123456789").toInt())
         assertEquals(Int.MAX_VALUE, UnsignedBigInteger(Int.MAX_VALUE).toInt())
+        assertEquals(2000000000, UnsignedBigInteger(2000000000).toInt())
+        assertThrows(ArithmeticException::class.java) {
+            UnsignedBigInteger("1000000000000000000").toInt()
+        }
     }
 }

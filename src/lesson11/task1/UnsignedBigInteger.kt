@@ -38,7 +38,11 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
     }
 
     private constructor(l: List<Int>) {
-        data = l
+        val summary = l.toMutableList()
+        while (summary.last() == 0 && summary.size > 1) {
+            summary.removeAt(summary.size - 1)
+        }
+        data = summary
     }
 
     //mode = 1 is add and mode = -1 is subtract
@@ -61,9 +65,6 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
                 summary[summary.size - 1] -= base
                 summary.add(1)
             }
-        }
-        while (summary.last() == 0 && summary.size > 1) {
-            summary.removeAt(summary.size - 1)
         }
         return UnsignedBigInteger(summary)
     }
@@ -139,9 +140,6 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
             digitNum--
         }
         result.reverse()
-        while (result.last() == 0 && result.size > 1) {
-            result.removeAt(result.size - 1)
-        }
         return UnsignedBigInteger(result)
     }
 

@@ -138,7 +138,11 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
             num -= digit * UnsignedBigInteger(downBorder)
             digitNum--
         }
-        return UnsignedBigInteger(result.reversed())
+        result.reverse()
+        while (result.last() == 0 && result.size > 1) {
+            result.removeAt(result.size - 1)
+        }
+        return UnsignedBigInteger(result)
     }
 
     /**

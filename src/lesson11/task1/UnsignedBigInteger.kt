@@ -38,54 +38,62 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
     }
 
     private constructor(l: List<Int>) {
-        val summary = l.toMutableList()
-        while (summary.last() == 0 && summary.size > 1) {
-            summary.removeAt(summary.size - 1)
-        }
-        data = summary
-    }
-
-    //mode = 1 is add and mode = -1 is subtract
-    private fun operation(other: UnsignedBigInteger, mode: Int): UnsignedBigInteger {
-        val summary = MutableList(max(other.data.size, data.size)) { 0 }
-        for (i in data.indices) {
-            summary[i] = data[i]
-        }
-        for (i in other.data.indices) {
-            summary[i] += mode * other.data[i]
-        }
-        for (i in 0 until summary.size - 1) {
-            if (summary[i] >= base || summary[i] < 0) {
-                summary[i] -= mode * base
-                summary[i + 1] += mode
-            }
-        }
-        if (mode == 1) {
-            if (summary.last() >= base) {
-                summary[summary.size - 1] -= base
-                summary.add(1)
-            }
-        }
-        return UnsignedBigInteger(summary)
+        data = l
     }
 
     /**
      * Сложение
      */
-    operator fun plus(other: UnsignedBigInteger): UnsignedBigInteger = operation(other, 1)
+    operator fun plus(other: UnsignedBigInteger): UnsignedBigInteger {
+        val summary = MutableList(max(other.data.size, data.size)) { 0 }
+        for (i in data.indices) {
+            summary[i] = data[i]
+        }
+        for (i in other.data.indices) {
+            summary[i] += other.data[i]
+        }
+        for (i in 0 until summary.size - 1) {
+            if (summary[i] >= base) {
+                summary[i] -= base
+                summary[i + 1]++
+            }
+        }
+        if (summary.last() >= base) {
+            summary[summary.size - 1] -= base
+            summary.add(1)
+        }
+        return UnsignedBigInteger(summary)
+    }
 
     /**
      * Вычитание (бросить ArithmeticException, если this < other)
      */
     operator fun minus(other: UnsignedBigInteger): UnsignedBigInteger {
         if (this < other) throw ArithmeticException()
-        return operation(other, -1)
+        val summary = MutableList(max(other.data.size, data.size)) { 0 }
+        for (i in data.indices) {
+            summary[i] = data[i]
+        }
+        for (i in other.data.indices) {
+            summary[i] -= other.data[i]
+        }
+        for (i in 0 until summary.size - 1) {
+            if (summary[i] < 0) {
+                summary[i] += base
+                summary[i + 1]--
+            }
+        }
+        while (summary.last() == 0 && summary.size > 1) {
+            summary.removeAt(summary.size - 1)
+        }
+        return UnsignedBigInteger(summary)
     }
 
     /**
      * Умножение
      */
     operator fun times(other: UnsignedBigInteger): UnsignedBigInteger {
+        if (this == UnsignedBigInteger(0) || other == UnsignedBigInteger(0)) return UnsignedBigInteger(0)
         var result = UnsignedBigInteger(0)
         for ((count, digit) in data.withIndex()) {
             val part = other.data.map { digit.toLong() * it }.toMutableList()
@@ -111,9 +119,10 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
      * Деление
      */
     operator fun div(other: UnsignedBigInteger): UnsignedBigInteger {
+        if (other == UnsignedBigInteger(0)) throw ArithmeticException()
         if (this < other) return UnsignedBigInteger(0)
         var num = this
-        val result = mutableListOf<Int>()
+        val summary = mutableListOf<Int>()
         var digitNum = this.data.size - other.data.size
         while (num > other) {
             var upBorder = base - 1
@@ -135,12 +144,15 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
             if (digit * UnsignedBigInteger(upBorder) <= num) {
                 downBorder = upBorder
             }
-            result.add(downBorder)
+            summary.add(downBorder)
             num -= digit * UnsignedBigInteger(downBorder)
             digitNum--
         }
-        result.reverse()
-        return UnsignedBigInteger(result)
+        summary.reverse()
+        while (summary.last() == 0 && summary.size > 1) {
+            summary.removeAt(summary.size - 1)
+        }
+        return UnsignedBigInteger(summary)
     }
 
     /**

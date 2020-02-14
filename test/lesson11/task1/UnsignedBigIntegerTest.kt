@@ -73,6 +73,9 @@ internal class UnsignedBigIntegerTest {
             UnsignedBigInteger(1),
             UnsignedBigInteger(999999999) / UnsignedBigInteger(999999998)
         )
+        assertThrows(ArithmeticException::class.java) {
+            UnsignedBigInteger(1) / UnsignedBigInteger(0)
+        }
     }
 
     @Test

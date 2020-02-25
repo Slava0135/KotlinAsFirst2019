@@ -155,18 +155,6 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
         return UnsignedBigInteger(summary)
     }
 
-    fun divByTwo(): UnsignedBigInteger {
-        val result = data.toMutableList()
-        for (i in (1 until result.size).reversed()) {
-            if (result[i] % 2 == 1) {
-                result[i - 1] += base
-            }
-            result[i] /= 2
-        }
-        result[0] /= 2
-        return UnsignedBigInteger(result)
-    }
-
     /**
      * Взятие остатка
      */

@@ -79,12 +79,6 @@ internal class UnsignedBigIntegerTest {
     }
 
     @Test
-    fun divByTwo() {
-        assertEquals(UnsignedBigInteger(1_000_000_000), UnsignedBigInteger(2_000_000_000).divByTwo())
-        assertEquals(UnsignedBigInteger(500_000), UnsignedBigInteger(1_000_000).divByTwo())
-    }
-
-    @Test
     @Tag("Impossible")
     fun rem() {
         assertEquals(UnsignedBigInteger(5), UnsignedBigInteger(19) % UnsignedBigInteger(7))

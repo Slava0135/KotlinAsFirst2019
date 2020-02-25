@@ -121,38 +121,19 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
     operator fun div(other: UnsignedBigInteger): UnsignedBigInteger {
         if (other == UnsignedBigInteger(0)) throw ArithmeticException()
         if (this < other) return UnsignedBigInteger(0)
-        var num = this
-        val summary = mutableListOf<Int>()
-        var digitNum = this.data.size - other.data.size
-        while (num > other) {
-            var upBorder = base - 1
-            var downBorder = 0
-            val digits = other.data.toMutableList()
-            for (i in 0 until digitNum) {
-                digits.add(0, 0)
+        var upBorder = UnsignedBigInteger(data)
+        var downBorder = UnsignedBigInteger(0)
+        var middle: UnsignedBigInteger
+        val one = UnsignedBigInteger(1) //very optimised and correct
+        while (upBorder - downBorder > one) {
+            middle = (upBorder + downBorder).divByTwo()
+            if (middle * other > this) {
+                upBorder = middle - one
+            } else {
+                downBorder = middle
             }
-            val digit = UnsignedBigInteger(digits)
-            while (upBorder - downBorder > 1) {
-                val middle = (upBorder + downBorder) / 2
-                val possibleMultiplier = digit * UnsignedBigInteger(middle)
-                if (possibleMultiplier > num) {
-                    upBorder = middle - 1
-                } else {
-                    downBorder = middle
-                }
-            }
-            if (digit * UnsignedBigInteger(upBorder) <= num) {
-                downBorder = upBorder
-            }
-            summary.add(downBorder)
-            num -= digit * UnsignedBigInteger(downBorder)
-            digitNum--
         }
-        summary.reverse()
-        while (summary.last() == 0 && summary.size > 1) {
-            summary.removeAt(summary.size - 1)
-        }
-        return UnsignedBigInteger(summary)
+        return if (upBorder * other <= this) upBorder else downBorder
     }
 
     fun divByTwo(): UnsignedBigInteger {
@@ -164,6 +145,9 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
             result[i] /= 2
         }
         result[0] /= 2
+        while (result.last() == 0 && result.size > 1) {
+            result.removeAt(result.size - 1)
+        }
         return UnsignedBigInteger(result)
     }
 

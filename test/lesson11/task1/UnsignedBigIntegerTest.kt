@@ -76,6 +76,9 @@ internal class UnsignedBigIntegerTest {
         assertThrows(ArithmeticException::class.java) {
             UnsignedBigInteger(1) / UnsignedBigInteger(0)
         }
+        for (i in 0..10000) {
+            UnsignedBigInteger("5475438975989473583459878754875484358433458435784538753487587345") / UnsignedBigInteger("4754757548484548573474858734")
+        }
     }
 
     @Test

@@ -33,8 +33,9 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
      */
     constructor(i: Int) {
         require(i >= 0)
-        data =
-            i.toString().reversed().chunked(maxDigitSize) { digit: CharSequence -> digit.reversed().toString().toInt() }
+        data = if (i > base) {
+            listOf(i % base, i / base)
+        } else listOf(i)
     }
 
     private constructor(l: List<Int>) {
@@ -70,10 +71,7 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
      */
     operator fun minus(other: UnsignedBigInteger): UnsignedBigInteger {
         if (this < other) throw ArithmeticException()
-        val summary = MutableList(max(other.data.size, data.size)) { 0 }
-        for (i in data.indices) {
-            summary[i] = data[i]
-        }
+        val summary = data.toMutableList()
         for (i in other.data.indices) {
             summary[i] -= other.data[i]
         }
@@ -95,7 +93,7 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
     operator fun times(other: UnsignedBigInteger): UnsignedBigInteger {
         if (this == UnsignedBigInteger(0) || other == UnsignedBigInteger(0)) return UnsignedBigInteger(0)
         var result = UnsignedBigInteger(0)
-        for ((count, digit) in data.withIndex()) {
+        for (digit in data.reversed()) {
             val part = other.data.map { digit.toLong() * it }.toMutableList()
             for (i in 0 until part.size - 1) {
                 if (part[i] >= base) {
@@ -107,11 +105,14 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
                 part.add(part.last() / base)
                 part[part.size - 2] = part[part.size - 2] % base
             }
-            for (i in 0 until count) {
-                part.add(0, 0)
-            }
             result += UnsignedBigInteger(part.map { it.toInt() })
+            val resultData = result.data.toMutableList()
+            resultData.add(0, 0)
+            result = UnsignedBigInteger(resultData)
         }
+        val resultData = result.data.toMutableList()
+        resultData.removeAt(0)
+        result = UnsignedBigInteger(resultData)
         return result
     }
 
